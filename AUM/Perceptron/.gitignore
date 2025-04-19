@@ -1,0 +1,13 @@
+# Środowiska i zależności
+.venv/
+env/
+__pycache__/
+*.pyc
+
+# PyCharm / VSCode
+.idea/
+.vscode/
+
+# Inne
+*.log
+.DS_Store
