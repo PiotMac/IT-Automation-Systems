@@ -234,4 +234,4 @@ with open('cnn_hyperparameter_tuning.csv', 'w', newline='') as f:
     dict_writer.writeheader()
     dict_writer.writerows(results)
 
-print("✅ Wyniki zapisane w cnn_hyperparameter_tuning.csv")
+print("Wyniki zapisane w cnn_hyperparameter_tuning.csv")

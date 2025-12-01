@@ -4,7 +4,7 @@ import ast
 import math
 from pandas.api.types import CategoricalDtype
 
-df = pd.read_csv("cnn_hyperparameter_tuning.csv")
+df = pd.read_csv("csv/cnn_hyperparameter_tuning.csv")
 
 def clean_augment(value):
     if value is None or (isinstance(value, float) and math.isnan(value)):
@@ -115,7 +115,7 @@ for metric in metrics:
 # Wypisanie wyników
 print("\n================= BEST RESULTS =================")
 for metric, row in best_rows.items():
-    print(f"\n🏆 Best {metric.upper()}: {row[metric]:.4f}")
+    print(f"\nBest {metric.upper()}: {row[metric]:.4f}")
     print("Parameters:")
     print(f"  N_MFCC:      {row['N_MFCC']}")
     print(f"  duration:    {row['duration']}")

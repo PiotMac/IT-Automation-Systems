@@ -1,7 +1,7 @@
 import pandas as pd
 import matplotlib.pyplot as plt
 
-df = pd.read_csv("cnn_architecture_tuning.csv")
+df = pd.read_csv("csv/cnn_architecture_tuning.csv")
 
 df = df.replace("None", None)
 
@@ -44,6 +44,6 @@ print("NAJLEPSZE KONFIGURACJE")
 print("========================\n")
 
 for metric, row in best_results.items():
-    print(f"🏆 Najlepsze dla {metric.upper()}:")
+    print(f"Najlepsze dla {metric.upper()}:")
     print(row)
     print("\n")

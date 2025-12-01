@@ -47,7 +47,7 @@ def preprocess_audio(path):
 
 def predict_file(path):
     if not os.path.exists(path):
-        print("❌ Plik nie istnieje:", path)
+        print("Plik nie istnieje:", path)
         return
 
 
@@ -63,7 +63,7 @@ def predict_file(path):
 
 if __name__ == "__main__":
     if len(sys.argv) < 2:
-        print("Użycie: python3 predict_single.py <sciezka_do_pliku.wav>")
+        print("Użycie: python3 predict_single_1D.py <sciezka_do_pliku.wav>")
         sys.exit(1)
 
     audio_path = sys.argv[1]
