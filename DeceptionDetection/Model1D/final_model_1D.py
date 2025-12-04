@@ -23,8 +23,8 @@ STEP = 1.0
 MODEL_OUT = "final_cnn_1D_model.h5"
 
 folders = {
-    "edited_truthful": "Edited clips/Truthful",
-    "edited_lies": "Edited clips/Deceptive"
+    "edited_truthful": "../Edited clips/Truthful",
+    "edited_lies": "../Edited clips/Deceptive"
 }
 
 def split_into_segments(y, sr, duration, step):

@@ -12,8 +12,6 @@ from audiomentations import Compose, AddGaussianNoise, PitchShift, TimeStretch
 
 # STAŁE PARAMETRY EKSTRAKCJI CECH
 SR = 22050
-DURATION = 2.0
-STEP = 1.0
 EPOCHS = 20
 
 # Stałe parametry dla ekstrakcji Mel-Spektrogramu (do użycia przed tuningiem cech)
@@ -22,6 +20,8 @@ CONST_FFT = 2048
 CONST_HOP_LENGTH = 512
 CONST_BATCH_SIZE = 8
 CONST_AUGMENT = None  # Brak augmentacji na etapie tuningu architektury (dla uproszczenia)
+DURATION = 2.0
+STEP = 1.0
 
 folders = {
     "edited_truthful": "../Edited clips/Truthful",
@@ -29,8 +29,8 @@ folders = {
 }
 
 # PARAMETRY ARCHITEKTURY DO TUNINGU 2D
-conv_layers_options = [3, 2]
-filters_options = [128]
+conv_layers_options = [2, 3]
+filters_options = [64, 128]
 kernel_sizes = [3, 5, 7]
 dropout_rates = [0.1, 0.2, 0.3]
 dense_units_options = [32, 64, 128]

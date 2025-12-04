@@ -12,23 +12,33 @@ from audiomentations import Compose, AddGaussianNoise, PitchShift, TimeStretch
 
 # STAŁE
 SR = 22050
-DURATION = 2.0
-STEP = 1.0
-EPOCHS = 20
+# DURATION = 2.0
+# STEP = 1.0
+EPOCHS = 10
+NO_CONV_LAYERS = 3
+FILTER_SIZE = 128
+KERNEL_SIZE = 7
+DROPOUT_RATE = 0.1
+DENSE_SIZE = 64
+POOL_SIZE = 2
 
 folders = {
-    "edited_truthful": "Edited clips/Truthful",
-    "edited_lies": "Edited clips/Deceptive"
+    "edited_truthful": "../Edited clips/Truthful",
+    "edited_lies": "../Edited clips/Deceptive"
 }
 
 # PARAMETRY DO TUNINGU 2D
 n_mels_values = [64, 128, 256]
-n_fft_values = [1024, 2048]
-hop_length_values = [512, 1024]
+n_fft_values = [2048] # [1024, 2048]
+hop_length_values = [512] #, 1024]
 batch_sizes = [8, 16, 32]
+durations = [2.0, 3.0, 4.0]
+steps = [1.0, 1.5, 2.0]
 
 augment_params = [
     {"noise": (0.001, 0.01), "pitch": (-1, 1), "stretch": (0.95, 1.05)},
+    {"noise": (0.001, 0.015), "pitch": (-2, 2), "stretch": (0.9, 1.1)},
+    {"noise": (0.005, 0.02), "pitch": (-3, 3), "stretch": (0.85, 1.15)},
     None
 ]
 
@@ -44,7 +54,7 @@ def split_into_segments(y, sr, duration, step):
     return segments
 
 
-def process_dataset(n_mels, n_fft, hop_length, augment_settings=None):
+def process_dataset(duration, step, n_mels, n_fft, hop_length, augment_settings=None):
     X, y = [], []
 
     augment = None
@@ -64,7 +74,7 @@ def process_dataset(n_mels, n_fft, hop_length, augment_settings=None):
                     file_path = os.path.join(root, file)
                     try:
                         y_audio, _ = librosa.load(file_path, sr=SR, mono=True)
-                        segments = split_into_segments(y_audio, SR, DURATION, STEP)
+                        segments = split_into_segments(y_audio, SR, duration, step)
 
                         for seg in segments:
                             if augment:
@@ -77,7 +87,7 @@ def process_dataset(n_mels, n_fft, hop_length, augment_settings=None):
                             log_mel_spec = librosa.power_to_db(mel_spec, ref=np.max)
 
                             # Zapewnienie stałej długości ramki czasowej
-                            target_frames = int(SR * DURATION / hop_length)
+                            target_frames = int(SR * duration / hop_length)
                             log_mel_spec = librosa.util.fix_length(log_mel_spec, size=target_frames, axis=1)
 
                             X.append(log_mel_spec)
@@ -102,22 +112,36 @@ def process_dataset(n_mels, n_fft, hop_length, augment_settings=None):
 
 # Podstawowa Architektura CNN 2D
 def build_base_cnn_2d(input_shape):
-    model = Sequential([
-        Input(shape=input_shape),
-        Conv2D(32, kernel_size=(5, 5), activation='relu', padding='same'),
-        BatchNormalization(),
-        MaxPooling2D(pool_size=(2, 2)),
-        Dropout(0.2),
+    model = Sequential()
+    model.add(Input(shape=input_shape))
 
-        Conv2D(64, kernel_size=(5, 5), activation='relu', padding='same'),
-        BatchNormalization(),
-        MaxPooling2D(pool_size=(2, 2)),
-        Dropout(0.2),
+    for i in range(NO_CONV_LAYERS):
+        model.add(Conv2D(FILTER_SIZE, kernel_size=(KERNEL_SIZE, KERNEL_SIZE), activation='relu', padding='same'))
+        model.add(BatchNormalization())
+        model.add(MaxPooling2D(pool_size=(POOL_SIZE, POOL_SIZE)))
+        model.add(Dropout(DROPOUT_RATE))
 
-        Flatten(),
-        Dense(64, activation='relu'),
-        Dense(1, activation='sigmoid')
-    ])
+        # Conv2D(128, kernel_size=(7, 7), activation='relu', padding='same'),
+        # BatchNormalization(),
+        # MaxPooling2D(pool_size=(2, 2)),
+        # Dropout(0.1),
+        #
+        # Conv2D(128, kernel_size=(7, 7), activation='relu', padding='same'),
+        # BatchNormalization(),
+        # MaxPooling2D(pool_size=(2, 2)),
+        # Dropout(0.1),
+        #
+        # Conv2D(128, kernel_size=(7, 7), activation='relu', padding='same'),
+        # BatchNormalization(),
+        # MaxPooling2D(pool_size=(2, 2)),
+        # Dropout(0.1),
+
+    model.add(Flatten())
+    model.add(Dense(DENSE_SIZE, activation='relu'))
+    model.add(Dense(1, activation='sigmoid'))
+        # Flatten(),
+        # Dense(DENSE_SIZE, activation='relu'),
+        # Dense(1, activation='sigmoid')
 
     model.compile(
         optimizer=Adam(1e-4),
@@ -155,9 +179,11 @@ def train_evaluate_model_2d(X, y, batch_size, epochs):
 # Eksperymenty: tuning hiperparametrów 2D
 results = []
 
-for n_mels, n_fft, hop_length, aug in product(n_mels_values, n_fft_values, hop_length_values, augment_params):
+for duration, step, n_mels, n_fft, hop_length, aug in product(durations, steps, n_mels_values, n_fft_values, hop_length_values, augment_params):
 
     X, y = process_dataset(
+        duration=duration,
+        step=step,
         n_mels=n_mels,
         n_fft=n_fft,
         hop_length=hop_length,
@@ -173,6 +199,8 @@ for n_mels, n_fft, hop_length, aug in product(n_mels_values, n_fft_values, hop_l
         )
 
         results.append({
+            "duration": duration,
+            "step": step,
             "N_MELS": n_mels,
             "N_FFT": n_fft,
             "HOP_LENGTH": hop_length,
@@ -181,14 +209,14 @@ for n_mels, n_fft, hop_length, aug in product(n_mels_values, n_fft_values, hop_l
             **metrics
         })
 
-        print(f"MELS={n_mels}, FFT={n_fft}, HOP={hop_length}, aug={aug}, batch={batch_size} "
-              f"--> acc={metrics['accuracy']:.3f}, f1={metrics['f1']:.3f}")
+        print(f"duration={duration}, step={step},  MELS={n_mels}, FFT={n_fft}, HOP={hop_length}, aug={aug}, batch={batch_size} "
+              f"--> acc={metrics['accuracy']:.3f}, prec={metrics['precision']:.3f}, rec={metrics['recall']:.3f}, f1={metrics['f1']:.3f}")
 
 # Zapis do CSV
 keys = results[0].keys()
-with open('cnn_2d_hyperparameter_tuning.csv', 'w', newline='') as f:
+with open('csv/cnn_2d_hyperparameter_tuning.csv', 'w', newline='') as f:
     dict_writer = csv.DictWriter(f, keys)
     dict_writer.writeheader()
     dict_writer.writerows(results)
 
-print("✅ Wyniki zapisane w cnn_2d_hyperparameter_tuning.csv")
+print("Wyniki zapisane w cnn_2d_hyperparameter_tuning.csv")
