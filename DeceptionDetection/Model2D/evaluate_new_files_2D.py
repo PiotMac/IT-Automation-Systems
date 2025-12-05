@@ -9,7 +9,10 @@ SR = 22050
 N_MFCC = 20
 DURATION = 2.0
 STEP = 1.0
-MODEL_PATH = "best_cnn_1D_model.h5"
+CONST_MELS = 128
+CONST_FFT = 2048
+CONST_HOP_LENGTH = 512
+MODEL_PATH = "best_cnn_2D_model.h5"
 NEW_DATA_FOLDER = "../New clips"
 
 folders = {
@@ -25,27 +28,31 @@ except FileNotFoundError:
     exit(1)
 
 
-def extract_mfcc_segments(path):
+def extract_melspectograms_segments(path):
     audio, _ = librosa.load(path, sr=SR, mono=True)
     segments = split_into_segments(audio, SR, DURATION, STEP)
     X = []
     for seg in segments:
-        mfcc = librosa.feature.mfcc(y=seg, sr=SR, n_mfcc=N_MFCC)
-        target_frames = int(SR * DURATION / 512)
-        mfcc = librosa.util.fix_length(mfcc, size=target_frames, axis=1)
-        X.append(mfcc)
+        mel_spec = librosa.feature.melspectrogram(
+            y=seg, sr=SR, n_fft=CONST_FFT, hop_length=CONST_HOP_LENGTH, n_mels=CONST_MELS
+        )
+        log_mel_spec = librosa.power_to_db(mel_spec, ref=np.max)
+
+        # Zapewnienie stałej długości ramki czasowej
+        target_frames = int(SR * DURATION / CONST_HOP_LENGTH)
+        log_mel_spec = librosa.util.fix_length(log_mel_spec, size=target_frames, axis=1)
+        X.append(log_mel_spec)
 
     X = np.array(X)
 
     X_normalized = (X - GLOBAL_MEAN) / (GLOBAL_STD + 1e-10)
 
-    X = np.transpose(X_normalized, (0, 2, 1))
+    X = np.expand_dims(X_normalized, axis=-1)
 
     return X
 
-
 def predict_file(model, path):
-    X = extract_mfcc_segments(path)
+    X = extract_melspectograms_segments(path)
     y_pred_prob = model.predict(X, verbose=0)
     y_pred = int(np.mean(y_pred_prob) > 0.5)
     return y_pred

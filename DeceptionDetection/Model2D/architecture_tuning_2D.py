@@ -1,14 +1,14 @@
-import os
 import csv
 import numpy as np
-import librosa
 from itertools import product
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score
 from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import Conv2D, MaxPooling2D, Dropout, Flatten, Dense, BatchNormalization, Input
 from tensorflow.keras.optimizers import Adam
+from tensorflow.keras.callbacks import EarlyStopping, ModelCheckpoint
 from audiomentations import Compose, AddGaussianNoise, PitchShift, TimeStretch
+from utils import process_dataset
 
 # STAŁE PARAMETRY EKSTRAKCJI CECH
 SR = 22050
@@ -19,7 +19,7 @@ CONST_MELS = 128
 CONST_FFT = 2048
 CONST_HOP_LENGTH = 512
 CONST_BATCH_SIZE = 8
-CONST_AUGMENT = None  # Brak augmentacji na etapie tuningu architektury (dla uproszczenia)
+CONST_AUGMENT = None
 DURATION = 2.0
 STEP = 1.0
 
@@ -28,65 +28,17 @@ folders = {
     "edited_lies": "../Edited clips/Deceptive"
 }
 
+MODEL_OUT = "arch_cnn_2D_model.h5"
+MEAN_FILE = "X_arch_MEAN.npy"
+STD_FILE = "X_arch_STD.npy"
+
 # PARAMETRY ARCHITEKTURY DO TUNINGU 2D
-conv_layers_options = [2, 3]
-filters_options = [64, 128]
+conv_layers_options = [1, 2, 3]
+filters_options = [32, 64, 128]
 kernel_sizes = [3, 5, 7]
 dropout_rates = [0.1, 0.2, 0.3]
 dense_units_options = [32, 64, 128]
 pool_sizes = [2, 3]
-
-
-def split_into_segments(y, sr, duration, step):
-    window = int(sr * duration)
-    hop = int(sr * step)
-    segments = []
-    for start in range(0, len(y) - window + 1, hop):
-        segments.append(y[start:start + window])
-    if len(segments) == 0:
-        segments.append(np.pad(y, (0, window - len(y))))
-    return segments
-
-
-def process_dataset(n_mels, n_fft, hop_length, augment_settings=None):
-    X, y = [], []
-    augment = None
-    if augment_settings:
-        augment = Compose([
-            AddGaussianNoise(*augment_settings["noise"], p=0.5),
-            PitchShift(*augment_settings["pitch"], p=0.5),
-            TimeStretch(*augment_settings["stretch"], p=0.5)
-        ])
-    for label, folder in folders.items():
-        label_val = 0 if "truth" in label.lower() else 1
-        for root, _, files in os.walk(folder):
-            for file in files:
-                if file.endswith(".wav"):
-                    file_path = os.path.join(root, file)
-                    try:
-                        y_audio, _ = librosa.load(file_path, sr=SR, mono=True)
-                        segments = split_into_segments(y_audio, SR, DURATION, STEP)
-                        for seg in segments:
-                            if augment:
-                                seg = augment(samples=seg, sample_rate=SR)
-                            # --- Mel-Spektrogram (2D) ---
-                            mel_spec = librosa.feature.melspectrogram(
-                                y=seg, sr=SR, n_fft=n_fft, hop_length=hop_length, n_mels=n_mels
-                            )
-                            log_mel_spec = librosa.power_to_db(mel_spec, ref=np.max)
-                            target_frames = int(SR * DURATION / hop_length)
-                            log_mel_spec = librosa.util.fix_length(log_mel_spec, size=target_frames, axis=1)
-                            X.append(log_mel_spec)
-                            y.append(label_val)
-                    except:
-                        continue
-    X = np.array(X)
-    y = np.array(y)
-    mean = np.mean(X, axis=(0, 1, 2), keepdims=True)
-    std = np.std(X, axis=(0, 1, 2), keepdims=True)
-    X = (X - mean) / (std + 1e-10)
-    X = np.expand_dims(X, axis=-1)
-    return X, y
 
 
 # Architektura CNN 2D dla tuningu
@@ -113,18 +65,14 @@ def build_custom_cnn_2d(input_shape, conv_layers, filters, kernel_size,
     return model
 
 
-def train_evaluate_custom_cnn_2d(X, y, conv_layers, filters, kernel_size,
+def train_evaluate_custom_cnn_2d(X_train, X_val, y_train, y_val, conv_layers, filters, kernel_size,
                                  dropout_rate, dense_units, batch_size, pool_size, epochs=20):
-    X_train, X_val, y_train, y_val = train_test_split(
-        X, y, test_size=0.2, stratify=y, random_state=42
-    )
 
-    # Sprawdzenie, czy jest wystarczająco danych
     if X_train.size == 0 or X_val.size == 0:
         return {"accuracy": 0.0, "precision": 0.0, "recall": 0.0, "f1": 0.0}
 
     model = build_custom_cnn_2d(
-        input_shape=X.shape[1:],
+        input_shape=X_train.shape[1:],
         conv_layers=conv_layers,
         filters=filters,
         kernel_size=kernel_size,
@@ -133,8 +81,26 @@ def train_evaluate_custom_cnn_2d(X, y, conv_layers, filters, kernel_size,
         pool_size=pool_size
     )
 
+    early_stopping = EarlyStopping(
+        monitor='val_loss',
+        patience=5,
+        verbose=1,
+        mode='min',
+        restore_best_weights=True
+    )
+
+    model_checkpoint = ModelCheckpoint(
+        MODEL_OUT,
+        monitor='val_loss',
+        save_best_only=True,
+        mode='min',
+        verbose=1
+    )
+
+    callbacks_list = [early_stopping, model_checkpoint]
+
     model.fit(X_train, y_train, validation_data=(X_val, y_val),
-              epochs=epochs, batch_size=batch_size, verbose=0)
+              epochs=epochs, batch_size=batch_size, verbose=1, callbacks=callbacks_list)
 
     y_pred = (model.predict(X_val, verbose=0) > 0.5).astype(int)
 
@@ -145,29 +111,40 @@ def train_evaluate_custom_cnn_2d(X, y, conv_layers, filters, kernel_size,
         "f1": f1_score(y_val, y_pred)
     }
 
-
-# PRZETWARZANIE DANYCH Z UŻYCIEM STAŁYCH PARAMETRÓW CECH
 print("Wczytywanie i przetwarzanie danych dla tuningu architektury (stałe parametry cech)...")
-X, y = process_dataset(
-    n_mels=CONST_MELS,
-    n_fft=CONST_FFT,
-    hop_length=CONST_HOP_LENGTH,
-    augment_settings=CONST_AUGMENT
-)
+X_raw, y = process_dataset(folders, SR, DURATION, STEP, CONST_MELS, CONST_FFT, CONST_HOP_LENGTH, CONST_AUGMENT)
 
-if X.size == 0:
+if X_raw.size == 0:
     print("Nie wczytano żadnych danych. Sprawdź ścieżki do plików.")
     exit()
 
-# --- TUNING ARCHITEKTURY ---
-print(f"Rozpoczęcie tuningu architektury 2D CNN na {X.shape[0]} segmentach...")
+print("Podział na zbiór treningowy i walidacyjny...")
+X_train_raw, X_val_raw, y_train, y_val = train_test_split(
+X_raw, y, test_size=0.2, stratify=y, random_state=42
+)
+
+print("Obliczanie i zapis statystyk normalizacyjnych...")
+X_arch_MEAN = np.mean(X_train_raw, axis=(0, 1, 2), keepdims=True)
+X_arch_STD = np.std(X_train_raw, axis=(0, 1, 2), keepdims=True)
+
+np.save(MEAN_FILE, X_arch_MEAN)
+np.save(STD_FILE, X_arch_STD)
+print(f"Zapisano statystyki do {MEAN_FILE} i {STD_FILE}")
+
+X_train = (X_train_raw - X_arch_MEAN) / (X_arch_STD + 1e-10)
+X_val = (X_val_raw - X_arch_MEAN) / (X_arch_STD + 1e-10)
+
+X_train = np.expand_dims(X_train, axis=-1)
+X_val = np.expand_dims(X_val, axis=-1)
+
+print(f"Rozpoczęcie tuningu architektury 2D CNN na {X_train.shape[0]} segmentach...")
 results_arch = []
 
 for conv_layers, filters, kernel_size, dropout_rate, dense_units, pool_size in product(
         conv_layers_options, filters_options, kernel_sizes, dropout_rates, dense_units_options, pool_sizes
 ):
     metrics = train_evaluate_custom_cnn_2d(
-        X, y,
+        X_train, X_val, y_train, y_val,
         conv_layers=conv_layers,
         filters=filters,
         kernel_size=kernel_size,

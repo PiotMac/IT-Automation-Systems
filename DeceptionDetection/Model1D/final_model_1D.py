@@ -2,10 +2,12 @@ import os
 import numpy as np
 import librosa
 from sklearn.model_selection import train_test_split
-from tensorflow.keras.models import Sequential
+from tensorflow.keras.models import Sequential, load_model
 from tensorflow.keras.layers import Conv1D, MaxPooling1D, Dropout, Flatten, Dense, BatchNormalization, Input
 from tensorflow.keras.optimizers import Adam
 from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score, confusion_matrix
+from tensorflow.keras.callbacks import EarlyStopping, ModelCheckpoint
+from utils import process_dataset, extract_features_from_audio
 
 BEST_PARAMS = {
     "conv_layers": 3,
@@ -20,63 +22,14 @@ SR = 22050
 N_MFCC = 20
 DURATION = 2.0
 STEP = 1.0
-MODEL_OUT = "final_cnn_1D_model.h5"
+MODEL_OUT = "best_cnn_1D_model.h5"
+MEAN_FILE = "X_MEAN.npy"
+STD_FILE = "X_STD.npy"
 
 folders = {
     "edited_truthful": "../Edited clips/Truthful",
     "edited_lies": "../Edited clips/Deceptive"
 }
-
-def split_into_segments(y, sr, duration, step):
-    window = int(sr * duration)
-    hop = int(sr * step)
-    segments = []
-
-    for start in range(0, len(y) - window + 1, hop):
-        segments.append(y[start:start + window])
-
-    if len(segments) == 0:
-        segments.append(np.pad(y, (0, window - len(y))))
-
-    return segments
-
-def extract_features_from_audio(audio):
-    segments = split_into_segments(audio, SR, DURATION, STEP)
-    X_segments = []
-
-    for seg in segments:
-        mfcc = librosa.feature.mfcc(y=seg, sr=SR, n_mfcc=N_MFCC)
-        target_frames = int(SR * DURATION / 512)
-        mfcc = librosa.util.fix_length(mfcc, size=target_frames, axis=1)
-        X_segments.append(mfcc)
-
-    X_segments = np.array(X_segments)
-    mean = np.mean(X_segments, axis=(0, 2), keepdims=True)
-    std = np.std(X_segments, axis=(0, 2), keepdims=True)
-    X_segments = (X_segments - mean) / (std + 1e-10)
-    X_segments = np.transpose(X_segments, (0, 2, 1))
-    return X_segments
-
-def load_dataset():
-    X, y = [], []
-
-    for label, folder in folders.items():
-        label_val = 0 if "truth" in label.lower() else 1
-
-        for root, _, files in os.walk(folder):
-            for file in files:
-                if file.endswith(".wav"):
-                    path = os.path.join(root, file)
-                    try:
-                        audio, _ = librosa.load(path, sr=SR, mono=True)
-                        X_segments = extract_features_from_audio(audio)
-                        for seg in X_segments:
-                            X.append(seg)
-                            y.append(label_val)
-                    except:
-                        continue
-
-    return np.array(X), np.array(y)
 
 
 def build_final_cnn(input_shape, params):
@@ -107,9 +60,9 @@ def build_final_cnn(input_shape, params):
     return model
 
 
-def predict_file(model, file_path):
+def predict_file(model, file_path, mean, std):
     audio, _ = librosa.load(file_path, sr=SR, mono=True)
-    X_segments = extract_features_from_audio(audio)
+    X_segments = extract_features_from_audio(audio, SR, DURATION, STEP, N_MFCC, mean, std)
     probs = model.predict(X_segments, verbose=0)
     mean_prob = probs.mean()
     predicted_class = 1 if mean_prob > 0.5 else 0
@@ -118,15 +71,45 @@ def predict_file(model, file_path):
 
 if __name__ == "__main__":
     print("Wczytywanie danych...")
-    X, y = load_dataset()
+    X_raw, y = process_dataset(folders, SR, DURATION, STEP, N_MFCC, augment_settings=None)
+    # X_raw, y = load_dataset()
 
     print("Podział na zbiór treningowy i walidacyjny...")
-    X_train, X_val, y_train, y_val = train_test_split(
-        X, y, test_size=0.2, stratify=y, random_state=42
+    X_train_raw, X_val_raw, y_train, y_val = train_test_split(
+        X_raw, y, test_size=0.2, stratify=y, random_state=42
     )
+
+    print("Obliczanie i zapis statystyk normalizacyjnych...")
+    X_MEAN = np.mean(X_train_raw, axis=(0, 1, 2), keepdims=True)
+    X_STD = np.std(X_train_raw, axis=(0, 1, 2), keepdims=True)
+
+    np.save(MEAN_FILE, X_MEAN)
+    np.save(STD_FILE, X_STD)
+    print(f"Zapisano statystyki do {MEAN_FILE} i {STD_FILE}")
+
+    X_train = (X_train_raw - X_MEAN) / (X_STD + 1e-10)
+    X_val = (X_val_raw - X_MEAN) / (X_STD + 1e-10)
 
     print("Budowa modelu...")
     model = build_final_cnn(X_train.shape[1:], BEST_PARAMS)
+
+    early_stopping = EarlyStopping(
+        monitor='val_loss',
+        patience=5,
+        verbose=1,
+        mode='min',
+        restore_best_weights=True
+    )
+
+    model_checkpoint = ModelCheckpoint(
+        MODEL_OUT,
+        monitor='val_loss',
+        save_best_only=True,
+        mode='min',
+        verbose=1
+    )
+
+    callbacks_list = [early_stopping, model_checkpoint]
 
     print("🚀 Trenowanie modelu...")
     history = model.fit(
@@ -134,8 +117,15 @@ if __name__ == "__main__":
         validation_data=(X_val, y_val),
         epochs=20,
         batch_size=8,
-        verbose=1
+        verbose=1,
+        callbacks=callbacks_list
     )
+
+    try:
+        model = load_model(MODEL_OUT)
+        print(f"\nUżyto najlepszego modelu zapisanego w {MODEL_OUT} do ewaluacji.")
+    except Exception as e:
+        print(f"\nBłąd ładowania najlepszego modelu ({MODEL_OUT}). Użyto stanu z ostatniej epoki.")
 
     print("Ewaluacja modelu na zbiorze walidacyjnym (segmenty)...")
     y_pred_prob = model.predict(X_val)
@@ -170,7 +160,7 @@ if __name__ == "__main__":
     y_file_prob = []
 
     for path in file_paths:
-        pred_class, prob = predict_file(model, path)
+        pred_class, prob = predict_file(model, path, X_MEAN, X_STD)
         y_file_pred.append(pred_class)
         y_file_prob.append(prob)
 
@@ -188,7 +178,4 @@ if __name__ == "__main__":
     print("\nConfusion matrix:")
     print(cm_f)
 
-    print("Zapis modelu do:", MODEL_OUT)
-    model.save(MODEL_OUT)
-
-    print("Gotowe! Model zapisano jako final_cnn_1D_model.h5")
+    print(f"Najlepszy model został już zapisany przez ModelCheckpoint do: {MODEL_OUT}")

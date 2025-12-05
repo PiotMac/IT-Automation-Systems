@@ -119,7 +119,6 @@ conv=3, filters=128, kernel=3, dropout=0.2, dense=64, pool=3 --> acc=0.892, prec
 conv=3, filters=128, kernel=3, dropout=0.2, dense=128, pool=2 --> acc=0.858, prec=0.782, rec=0.966, f1=0.864
 conv=3, filters=128, kernel=3, dropout=0.2, dense=128, pool=3 --> acc=0.865, prec=0.899, rec=0.803, f1=0.849
 conv=3, filters=128, kernel=3, dropout=0.3, dense=32, pool=2 --> acc=0.923, prec=0.952, rec=0.882, f1=0.915
-
 conv=3, filters=128, kernel=5, dropout=0.1, dense=32, pool=2 --> acc=0.953, prec=0.960, rec=0.938, f1=0.949
 conv=3, filters=128, kernel=5, dropout=0.1, dense=32, pool=3 --> acc=0.881, prec=0.867, rec=0.882, f1=0.875
 conv=3, filters=128, kernel=5, dropout=0.1, dense=64, pool=2 --> acc=0.929, prec=0.942, rec=0.904, f1=0.923

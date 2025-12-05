@@ -16,23 +16,6 @@ architecture_params = [
 
 metrics = ["accuracy", "precision", "recall", "f1"]
 
-for param in architecture_params:
-    plt.figure(figsize=(10, 6))
-
-    grouped = df.groupby(param)[metrics].mean()
-
-    for metric in metrics:
-        plt.plot(grouped.index, grouped[metric], marker="o", label=metric)
-
-    plt.title(f"Wpływ parametru: {param} na metryki")
-    plt.xlabel(param)
-    plt.ylabel("Score")
-    plt.grid(True)
-    plt.legend()
-    plt.tight_layout()
-    plt.savefig(f"plot_for_{param}")
-
-
 best_results = {}
 
 for metric in metrics:
