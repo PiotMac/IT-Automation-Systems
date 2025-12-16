@@ -76,7 +76,7 @@ def predict_file(model, file_path, mean, std):
 
 if __name__ == "__main__":
     print("Wczytywanie danych...")
-    X_raw, y = process_dataset(SR, DURATION, STEP, CONST_MELS, CONST_FFT, CONST_HOP_LENGTH, CONST_AUGMENT)
+    X_raw, y = process_dataset(folders, SR, DURATION, STEP, CONST_MELS, CONST_FFT, CONST_HOP_LENGTH, CONST_AUGMENT)
 
     print("Podział na zbiór treningowy i walidacyjny...")
     X_train_raw, X_val_raw, y_train, y_val = train_test_split(
