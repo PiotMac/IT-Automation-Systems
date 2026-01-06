@@ -1,8 +1,6 @@
 import pandas as pd
-import matplotlib.pyplot as plt
 import ast
 import math
-from pandas.api.types import CategoricalDtype
 
 df = pd.read_csv("csv/cnn_hyperparameter_tuning.csv")
 
@@ -53,13 +51,12 @@ for metric in metrics:
     best_idx = df[metric].idxmax()
     best_rows[metric] = df.loc[best_idx]
 
-# Wypisanie wyników
-print("\n================= BEST RESULTS =================")
+
+print("\n========================")
+print("NAJLEPSZE KONFIGURACJE")
+print("========================\n")
+
 for metric, row in best_rows.items():
-    print(f"\nBest {metric.upper()}: {row[metric]:.4f}")
-    print("Parameters:")
-    print(f"  N_MFCC:      {row['N_MFCC']}")
-    print(f"  duration:    {row['duration']}")
-    print(f"  step:        {row['step']}")
-    print(f"  batch_size:  {row['batch_size']}")
-    print(f"  augment:     {row['augment_category']}  ({row['augment_clean']})")
+    print(f"Najlepsze dla {metric.upper()}:")
+    print(row)
+    print("\n")

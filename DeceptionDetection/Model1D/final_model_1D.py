@@ -19,9 +19,11 @@ BEST_PARAMS = {
 }
 
 SR = 22050
-N_MFCC = 20
-DURATION = 2.0
-STEP = 1.0
+N_MFCC = 40
+DURATION = 4.0
+STEP = 2.0
+BATCH_SIZE = 16
+
 MODEL_OUT = "best_cnn_1D_model.h5"
 MEAN_FILE = "X_MEAN.npy"
 STD_FILE = "X_STD.npy"
@@ -116,7 +118,7 @@ if __name__ == "__main__":
         X_train, y_train,
         validation_data=(X_val, y_val),
         epochs=20,
-        batch_size=8,
+        batch_size=BATCH_SIZE,
         verbose=1,
         callbacks=callbacks_list
     )
