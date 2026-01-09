@@ -1,0 +1,98 @@
+Indeksowanie plików...
+Podział plików na zbiory (Train/Val)...
+Liczba plików treningowych: 139
+Liczba plików walidacyjnych: 35
+Generowanie segmentów treningowych...
+Generowanie segmentów walidacyjnych...
+Obliczanie statystyk normalizacyjnych (tylko na Train)...
+Kształt X_train: (875, 172, 40)
+Kształt X_val: (261, 172, 40)
+Budowa modelu...
+2026-01-09 19:03:17.913460: I tensorflow/core/platform/cpu_feature_guard.cc:210] This TensorFlow binary is optimized to use available CPU instructions in performance-critical operations.
+To enable the following instructions: SSE3 SSE4.1 SSE4.2 AVX, in other operations, rebuild TensorFlow with the appropriate compiler flags.
+🚀 Trenowanie modelu...
+Epoch 1/50
+109/110 ━━━━━━━━━━━━━━━━━━━━ 0s 6ms/step - accuracy: 0.4673 - loss: 1.0167
+Epoch 1: val_loss improved from None to 0.73000, saving model to best_cnn_1D_model.h5
+WARNING:absl:You are saving your model as an HDF5 file via `model.save()` or `keras.saving.save_model(model)`. This file format is considered legacy. We recommend using instead the native Keras format, e.g. `model.save('my_model.keras')` or `keras.saving.save_model(model, 'my_model.keras')`.
+110/110 ━━━━━━━━━━━━━━━━━━━━ 5s 12ms/step - accuracy: 0.5063 - loss: 0.9295 - val_accuracy: 0.4981 - val_loss: 0.7300
+Epoch 2/50
+108/110 ━━━━━━━━━━━━━━━━━━━━ 0s 6ms/step - accuracy: 0.5312 - loss: 0.8288
+Epoch 2: val_loss improved from 0.73000 to 0.68482, saving model to best_cnn_1D_model.h5
+WARNING:absl:You are saving your model as an HDF5 file via `model.save()` or `keras.saving.save_model(model)`. This file format is considered legacy. We recommend using instead the native Keras format, e.g. `model.save('my_model.keras')` or `keras.saving.save_model(model, 'my_model.keras')`.
+110/110 ━━━━━━━━━━━━━━━━━━━━ 1s 8ms/step - accuracy: 0.5646 - loss: 0.7915 - val_accuracy: 0.5556 - val_loss: 0.6848
+Epoch 3/50
+105/110 ━━━━━━━━━━━━━━━━━━━━ 0s 7ms/step - accuracy: 0.6020 - loss: 0.7346
+WARNING:absl:You are saving your model as an HDF5 file via `model.save()` or `keras.saving.save_model(model)`. This file format is considered legacy. We recommend using instead the native Keras format, e.g. `model.save('my_model.keras')` or `keras.saving.save_model(model, 'my_model.keras')`.
+Epoch 3: val_loss improved from 0.68482 to 0.62130, saving model to best_cnn_1D_model.h5
+110/110 ━━━━━━━━━━━━━━━━━━━━ 1s 9ms/step - accuracy: 0.5943 - loss: 0.7639 - val_accuracy: 0.6437 - val_loss: 0.6213
+Epoch 4/50
+110/110 ━━━━━━━━━━━━━━━━━━━━ 0s 7ms/step - accuracy: 0.6014 - loss: 0.7088
+Epoch 4: val_loss improved from 0.62130 to 0.59634, saving model to best_cnn_1D_model.h5
+WARNING:absl:You are saving your model as an HDF5 file via `model.save()` or `keras.saving.save_model(model)`. This file format is considered legacy. We recommend using instead the native Keras format, e.g. `model.save('my_model.keras')` or `keras.saving.save_model(model, 'my_model.keras')`.
+110/110 ━━━━━━━━━━━━━━━━━━━━ 1s 9ms/step - accuracy: 0.6206 - loss: 0.7057 - val_accuracy: 0.6743 - val_loss: 0.5963
+Epoch 5/50
+108/110 ━━━━━━━━━━━━━━━━━━━━ 0s 8ms/step - accuracy: 0.6647 - loss: 0.6033
+WARNING:absl:You are saving your model as an HDF5 file via `model.save()` or `keras.saving.save_model(model)`. This file format is considered legacy. We recommend using instead the native Keras format, e.g. `model.save('my_model.keras')` or `keras.saving.save_model(model, 'my_model.keras')`.
+Epoch 5: val_loss improved from 0.59634 to 0.57244, saving model to best_cnn_1D_model.h5
+110/110 ━━━━━━━━━━━━━━━━━━━━ 1s 10ms/step - accuracy: 0.6400 - loss: 0.6503 - val_accuracy: 0.7165 - val_loss: 0.5724
+Epoch 6/50
+104/110 ━━━━━━━━━━━━━━━━━━━━ 0s 7ms/step - accuracy: 0.6488 - loss: 0.6359
+WARNING:absl:You are saving your model as an HDF5 file via `model.save()` or `keras.saving.save_model(model)`. This file format is considered legacy. We recommend using instead the native Keras format, e.g. `model.save('my_model.keras')` or `keras.saving.save_model(model, 'my_model.keras')`.
+Epoch 6: val_loss improved from 0.57244 to 0.56530, saving model to best_cnn_1D_model.h5
+110/110 ━━━━━━━━━━━━━━━━━━━━ 1s 9ms/step - accuracy: 0.6377 - loss: 0.6613 - val_accuracy: 0.7241 - val_loss: 0.5653
+Epoch 7/50
+105/110 ━━━━━━━━━━━━━━━━━━━━ 0s 6ms/step - accuracy: 0.6349 - loss: 0.6543
+WARNING:absl:You are saving your model as an HDF5 file via `model.save()` or `keras.saving.save_model(model)`. This file format is considered legacy. We recommend using instead the native Keras format, e.g. `model.save('my_model.keras')` or `keras.saving.save_model(model, 'my_model.keras')`.
+Epoch 7: val_loss improved from 0.56530 to 0.56162, saving model to best_cnn_1D_model.h5
+110/110 ━━━━━━━━━━━━━━━━━━━━ 1s 8ms/step - accuracy: 0.6389 - loss: 0.6756 - val_accuracy: 0.7088 - val_loss: 0.5616
+Epoch 8/50
+103/110 ━━━━━━━━━━━━━━━━━━━━ 0s 7ms/step - accuracy: 0.6360 - loss: 0.6456
+Epoch 8: val_loss did not improve from 0.56162
+110/110 ━━━━━━━━━━━━━━━━━━━━ 1s 8ms/step - accuracy: 0.6526 - loss: 0.6407 - val_accuracy: 0.6590 - val_loss: 0.5904
+Epoch 9/50
+103/110 ━━━━━━━━━━━━━━━━━━━━ 0s 7ms/step - accuracy: 0.6852 - loss: 0.5987
+Epoch 9: val_loss did not improve from 0.56162
+110/110 ━━━━━━━━━━━━━━━━━━━━ 1s 8ms/step - accuracy: 0.6617 - loss: 0.6271 - val_accuracy: 0.6667 - val_loss: 0.5764
+Epoch 10/50
+109/110 ━━━━━━━━━━━━━━━━━━━━ 0s 6ms/step - accuracy: 0.6944 - loss: 0.5768
+Epoch 10: val_loss did not improve from 0.56162
+110/110 ━━━━━━━━━━━━━━━━━━━━ 1s 8ms/step - accuracy: 0.6846 - loss: 0.5855 - val_accuracy: 0.6552 - val_loss: 0.5913
+Epoch 11/50
+103/110 ━━━━━━━━━━━━━━━━━━━━ 0s 6ms/step - accuracy: 0.6980 - loss: 0.5499
+Epoch 11: val_loss did not improve from 0.56162
+110/110 ━━━━━━━━━━━━━━━━━━━━ 1s 8ms/step - accuracy: 0.7109 - loss: 0.5590 - val_accuracy: 0.6935 - val_loss: 0.5647
+Epoch 12/50
+108/110 ━━━━━━━━━━━━━━━━━━━━ 0s 6ms/step - accuracy: 0.7280 - loss: 0.5399
+Epoch 12: val_loss did not improve from 0.56162
+110/110 ━━━━━━━━━━━━━━━━━━━━ 1s 8ms/step - accuracy: 0.7349 - loss: 0.5527 - val_accuracy: 0.6820 - val_loss: 0.5783
+Epoch 12: early stopping
+Restoring model weights from the end of the best epoch: 7.
+WARNING:absl:Compiled the loaded model, but the compiled metrics have yet to be built. `model.compile_metrics` will be empty until you train or evaluate the model.
+
+Użyto najlepszego modelu zapisanego w best_cnn_1D_model.h5 do ewaluacji.
+Ewaluacja modelu na zbiorze walidacyjnym (segmenty)...
+9/9 ━━━━━━━━━━━━━━━━━━━━ 0s 23ms/step
+
+=================== WYNIKI DLA SEGMENTÓW ===================
+Accuracy : 0.7088
+Precision: 0.6812
+Recall   : 0.7460
+F1-score : 0.7121
+
+Confusion matrix:
+[[91 44]
+ [32 94]]
+
+Ewaluacja modelu na poziomie całych plików...
+
+=================== WYNIKI DLA PLIKÓW CAŁKOWITYCH ===================
+Accuracy : 0.6571
+Precision: 0.6500
+Recall   : 0.7222
+F1-score : 0.6842
+
+Confusion matrix:
+[[10  7]
+ [ 5 13]]
+Najlepszy model został już zapisany przez ModelCheckpoint do: best_cnn_1D_model.h5

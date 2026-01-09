@@ -8,7 +8,7 @@ from utils import split_into_segments
 SR = 22050
 N_MFCC = 40
 DURATION = 4.0
-STEP = 2.0
+STEP = 1.5
 MODEL_PATH = "best_cnn_1D_model.h5"
 NEW_DATA_FOLDER = "../New clips"
 

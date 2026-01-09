@@ -58,5 +58,13 @@ print("========================\n")
 
 for metric, row in best_rows.items():
     print(f"Najlepsze dla {metric.upper()}:")
-    print(row)
+
+    row = row.drop(labels=['augment_clean'], errors='ignore')
+    row = row.drop(labels=['augment'], errors='ignore')
+    all_cols = row.index.tolist()
+    hyperparams = [col for col in all_cols if col not in metrics]
+    new_order = hyperparams + metrics
+    row_sorted = row.reindex(new_order)
+
+    print(row_sorted)
     print("\n")

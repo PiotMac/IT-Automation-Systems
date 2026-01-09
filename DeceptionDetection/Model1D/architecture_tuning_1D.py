@@ -7,7 +7,7 @@ from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import Conv1D, MaxPooling1D, Dropout, Flatten, Dense, BatchNormalization, Input
 from tensorflow.keras.optimizers import Adam
 from tensorflow.keras.callbacks import EarlyStopping
-from utils import process_dataset
+from utils import get_all_file_paths, create_dataset_from_file_list
 
 folders = {
     "edited_truthful": "../Edited clips/Truthful",
@@ -23,7 +23,7 @@ best_hyperparams = {
     "batch_size": 8
 }
 
-conv_layers_options = [3]
+conv_layers_options = [1, 2, 3]
 filters_options = [32, 64, 128]
 kernel_sizes = [3, 5, 7]
 dropout_rates = [0.1, 0.2, 0.3]
@@ -107,34 +107,73 @@ def train_evaluate_custom_cnn(X_train, X_val, y_train, y_val, conv_layers, filte
         "f1": f1_score(y_val, y_pred)
     }
 
-X_raw, y = process_dataset(
-    folders,
-    SR=22050,
-    duration=best_hyperparams["duration"],
-    step=best_hyperparams["step"],
-    N_MFCC=best_hyperparams["N_MFCC"],
-    augment_settings=best_hyperparams["augment"]
+
+print("Indeksowanie plików...")
+all_files = get_all_file_paths(folders)
+labels = [item[1] for item in all_files]
+
+print("Podział plików na zbiory (Train/Val)...")
+train_files, val_files = train_test_split(
+    all_files, test_size=0.2, stratify=labels, random_state=42
 )
 
-if X_raw.size == 0:
-    print("Nie wczytano żadnych danych. Sprawdź ścieżki do plików.")
-    exit()
+print(f"Liczba plików treningowych: {len(train_files)}")
+print(f"Liczba plików walidacyjnych: {len(val_files)}")
 
-print("Podział na zbiór treningowy i walidacyjny...")
-X_train_raw, X_val_raw, y_train, y_val = train_test_split(
-X_raw, y, test_size=0.2, stratify=y, random_state=42
+print("Generowanie segmentów treningowych...")
+X_train_raw, y_train = create_dataset_from_file_list(
+    train_files, 22050, best_hyperparams["duration"], best_hyperparams["step"], best_hyperparams["N_MFCC"],
+    best_hyperparams["augment"]
 )
 
-print("Obliczanie i zapis statystyk normalizacyjnych...")
-X_arch_MEAN = np.mean(X_train_raw, axis=(0, 1, 2), keepdims=True)
-X_arch_STD = np.std(X_train_raw, axis=(0, 1, 2), keepdims=True)
+print("Generowanie segmentów walidacyjnych...")
+# Dla walidacji NIGDY nie używamy augmentacji
+X_val_raw, y_val = create_dataset_from_file_list(
+    val_files, 22050, best_hyperparams["duration"], best_hyperparams["step"], best_hyperparams["N_MFCC"],
+    augment_settings=None
+)
 
-np.save(MEAN_FILE, X_arch_MEAN)
-np.save(STD_FILE, X_arch_STD)
-print(f"Zapisano statystyki do {MEAN_FILE} i {STD_FILE}")
+print("Obliczanie statystyk normalizacyjnych (tylko na Train)...")
+X_MEAN = np.mean(X_train_raw, axis=(0, 1, 2), keepdims=True)
+X_STD = np.std(X_train_raw, axis=(0, 1, 2), keepdims=True)
 
-X_train = (X_train_raw - X_arch_MEAN) / (X_arch_STD + 1e-10)
-X_val = (X_val_raw - X_arch_MEAN) / (X_arch_STD + 1e-10)
+np.save(MEAN_FILE, X_MEAN)
+np.save(STD_FILE, X_STD)
+
+X_train = (X_train_raw - X_MEAN) / (X_STD + 1e-10)
+X_val = (X_val_raw - X_MEAN) / (X_STD + 1e-10)
+
+print(f"Kształt X_train: {X_train.shape}")
+print(f"Kształt X_val: {X_val.shape}")
+
+# X_raw, y = process_dataset(
+#     folders,
+#     SR=22050,
+#     duration=best_hyperparams["duration"],
+#     step=best_hyperparams["step"],
+#     N_MFCC=best_hyperparams["N_MFCC"],
+#     augment_settings=best_hyperparams["augment"]
+# )
+#
+# if X_raw.size == 0:
+#     print("Nie wczytano żadnych danych. Sprawdź ścieżki do plików.")
+#     exit()
+#
+# print("Podział na zbiór treningowy i walidacyjny...")
+# X_train_raw, X_val_raw, y_train, y_val = train_test_split(
+# X_raw, y, test_size=0.2, stratify=y, random_state=42
+# )
+#
+# print("Obliczanie i zapis statystyk normalizacyjnych...")
+# X_arch_MEAN = np.mean(X_train_raw, axis=(0, 1, 2), keepdims=True)
+# X_arch_STD = np.std(X_train_raw, axis=(0, 1, 2), keepdims=True)
+#
+# np.save(MEAN_FILE, X_arch_MEAN)
+# np.save(STD_FILE, X_arch_STD)
+# print(f"Zapisano statystyki do {MEAN_FILE} i {STD_FILE}")
+#
+# X_train = (X_train_raw - X_arch_MEAN) / (X_arch_STD + 1e-10)
+# X_val = (X_val_raw - X_arch_MEAN) / (X_arch_STD + 1e-10)
 
 results_arch = []
 
@@ -169,7 +208,7 @@ for conv_layers, filters, kernel_size, dropout_rate, dense_units, pool_size in p
 
 
 keys = results_arch[0].keys()
-with open('csv/cnn_architecture_tuning.csv', 'w', newline='') as f:
+with open('csv_test/cnn_architecture_tuning.csv', 'w', newline='') as f:
     dict_writer = csv.DictWriter(f, keys)
     dict_writer.writeheader()
     dict_writer.writerows(results_arch)
