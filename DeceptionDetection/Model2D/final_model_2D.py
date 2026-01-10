@@ -1,5 +1,3 @@
-import os
-import numpy as np
 import librosa
 import numpy as np
 from sklearn.model_selection import train_test_split
@@ -8,24 +6,24 @@ from tensorflow.keras.models import Sequential, load_model
 from tensorflow.keras.layers import Conv2D, MaxPooling2D, Dropout, Flatten, Dense, BatchNormalization, Input
 from tensorflow.keras.optimizers import Adam
 from tensorflow.keras.callbacks import EarlyStopping, ModelCheckpoint
-from utils import process_dataset, extract_features_from_audio
+from utils import extract_features_from_audio, get_all_file_paths, create_dataset_from_file_list
 
 BEST_PARAMS = {
     "conv_layers": 3,
-    "filters": 128,
-    "kernel_size": 7,
-    "dropout_rate": 0.1,
-    "dense_units": 64,
+    "filters": 32,
+    "kernel_size": 5,
+    "dropout_rate": 0.3,
+    "dense_units": 32,
     "pool_size": 2
 }
 
 SR = 22050
 EPOCHS = 50
-CONST_MELS = 128
+CONST_MELS = 64
 CONST_FFT = 2048
 CONST_HOP_LENGTH = 512
-CONST_BATCH_SIZE = 8
-CONST_AUGMENT = None
+CONST_BATCH_SIZE = 16
+CONST_AUGMENT = {"noise": (0.001, 0.01), "pitch": (-1, 1), "stretch": (0.95, 1.05)}
 DURATION = 2.0
 STEP = 1.0
 
@@ -75,27 +73,43 @@ def predict_file(model, file_path, mean, std):
 
 
 if __name__ == "__main__":
-    print("Wczytywanie danych...")
-    X_raw, y = process_dataset(folders, SR, DURATION, STEP, CONST_MELS, CONST_FFT, CONST_HOP_LENGTH, CONST_AUGMENT)
+    print("Indeksowanie plików...")
+    all_files = get_all_file_paths(folders)
+    labels = [item[1] for item in all_files]
 
-    print("Podział na zbiór treningowy i walidacyjny...")
-    X_train_raw, X_val_raw, y_train, y_val = train_test_split(
-        X_raw, y, test_size=0.2, stratify=y, random_state=42
+    print("Podział plików na zbiory (Train/Val)...")
+    train_files, val_files = train_test_split(
+        all_files, test_size=0.2, stratify=labels, random_state=42
     )
 
-    print("Obliczanie i zapis statystyk normalizacyjnych...")
+    print(f"Liczba plików treningowych: {len(train_files)}")
+    print(f"Liczba plików walidacyjnych: {len(val_files)}")
+
+    print("Generowanie segmentów treningowych...")
+    X_train_raw, y_train = create_dataset_from_file_list(
+        train_files, SR, DURATION, STEP, CONST_MELS, CONST_FFT, CONST_HOP_LENGTH, CONST_AUGMENT
+    )
+
+    print("Generowanie segmentów walidacyjnych...")
+    X_val_raw, y_val = create_dataset_from_file_list(
+        val_files, SR, DURATION, STEP, CONST_MELS, CONST_FFT, CONST_HOP_LENGTH, augment_settings=None
+    )
+
+    print("Obliczanie statystyk normalizacyjnych (tylko na Train)...")
     X_MEAN = np.mean(X_train_raw, axis=(0, 1, 2), keepdims=True)
     X_STD = np.std(X_train_raw, axis=(0, 1, 2), keepdims=True)
 
     np.save(MEAN_FILE, X_MEAN)
     np.save(STD_FILE, X_STD)
-    print(f"Zapisano statystyki do {MEAN_FILE} i {STD_FILE}")
 
     X_train = (X_train_raw - X_MEAN) / (X_STD + 1e-10)
     X_val = (X_val_raw - X_MEAN) / (X_STD + 1e-10)
 
     X_train = np.expand_dims(X_train, axis=-1)
     X_val = np.expand_dims(X_val, axis=-1)
+
+    print(f"Kształt X_train: {X_train.shape}")
+    print(f"Kształt X_val: {X_val.shape}")
 
     print("Budowa modelu...")
     model = build_final_cnn_2d(X_train.shape[1:], BEST_PARAMS)
@@ -153,30 +167,18 @@ if __name__ == "__main__":
     print(cm)
 
     print("\nEwaluacja modelu na poziomie całych plików...")
-    file_paths = []
-    file_labels = []
-
-    for label, folder in folders.items():
-        label_val = 0 if "truth" in label.lower() else 1
-        for root, _, files in os.walk(folder):
-            for file in files:
-                if file.endswith(".wav"):
-                    file_paths.append(os.path.join(root, file))
-                    file_labels.append(label_val)
-
+    y_file_true = []
     y_file_pred = []
-    y_file_prob = []
-
-    for path in file_paths:
-        pred_class, prob = predict_file(model, path, X_MEAN, X_STD)
+    for file_path, label in val_files:
+        pred_class, _ = predict_file(model, file_path, X_MEAN, X_STD)
+        y_file_true.append(label)
         y_file_pred.append(pred_class)
-        y_file_prob.append(prob)
 
-    acc_f = accuracy_score(file_labels, y_file_pred)
-    prec_f = precision_score(file_labels, y_file_pred)
-    rec_f = recall_score(file_labels, y_file_pred)
-    f1_f = f1_score(file_labels, y_file_pred)
-    cm_f = confusion_matrix(file_labels, y_file_pred)
+    acc_f = accuracy_score(y_file_true, y_file_pred)
+    prec_f = precision_score(y_file_true, y_file_pred)
+    rec_f = recall_score(y_file_true, y_file_pred)
+    f1_f = f1_score(y_file_true, y_file_pred)
+    cm_f = confusion_matrix(y_file_true, y_file_pred)
 
     print("\n=================== WYNIKI DLA PLIKÓW CAŁKOWITYCH ===================")
     print(f"Accuracy : {acc_f:.4f}")

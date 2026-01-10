@@ -6,13 +6,12 @@ from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_sc
 from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import Conv2D, MaxPooling2D, Dropout, Flatten, Dense, BatchNormalization, Input
 from tensorflow.keras.optimizers import Adam
-from tensorflow.keras.callbacks import EarlyStopping, ModelCheckpoint
-from audiomentations import Compose, AddGaussianNoise, PitchShift, TimeStretch
-from utils import process_dataset
+from tensorflow.keras.callbacks import EarlyStopping
+from utils import get_all_file_paths, create_dataset_from_file_list
 
 # STAŁE PARAMETRY EKSTRAKCJI CECH
 SR = 22050
-EPOCHS = 20
+EPOCHS = 50
 
 # Stałe parametry dla ekstrakcji Mel-Spektrogramu (do użycia przed tuningiem cech)
 CONST_MELS = 128
@@ -28,7 +27,6 @@ folders = {
     "edited_lies": "../Edited clips/Deceptive"
 }
 
-MODEL_OUT = "arch_cnn_2D_model.h5"
 MEAN_FILE = "X_arch_MEAN.npy"
 STD_FILE = "X_arch_STD.npy"
 
@@ -84,23 +82,15 @@ def train_evaluate_custom_cnn_2d(X_train, X_val, y_train, y_val, conv_layers, fi
     early_stopping = EarlyStopping(
         monitor='val_loss',
         patience=5,
-        verbose=1,
+        verbose=0,
         mode='min',
         restore_best_weights=True
     )
 
-    model_checkpoint = ModelCheckpoint(
-        MODEL_OUT,
-        monitor='val_loss',
-        save_best_only=True,
-        mode='min',
-        verbose=1
-    )
-
-    callbacks_list = [early_stopping, model_checkpoint]
+    callbacks_list = [early_stopping]
 
     model.fit(X_train, y_train, validation_data=(X_val, y_val),
-              epochs=epochs, batch_size=batch_size, verbose=1, callbacks=callbacks_list)
+              epochs=epochs, batch_size=batch_size, verbose=0, callbacks=callbacks_list)
 
     y_pred = (model.predict(X_val, verbose=0) > 0.5).astype(int)
 
@@ -111,31 +101,45 @@ def train_evaluate_custom_cnn_2d(X_train, X_val, y_train, y_val, conv_layers, fi
         "f1": f1_score(y_val, y_pred)
     }
 
-print("Wczytywanie i przetwarzanie danych dla tuningu architektury (stałe parametry cech)...")
-X_raw, y = process_dataset(folders, SR, DURATION, STEP, CONST_MELS, CONST_FFT, CONST_HOP_LENGTH, CONST_AUGMENT)
 
-if X_raw.size == 0:
-    print("Nie wczytano żadnych danych. Sprawdź ścieżki do plików.")
-    exit()
 
-print("Podział na zbiór treningowy i walidacyjny...")
-X_train_raw, X_val_raw, y_train, y_val = train_test_split(
-X_raw, y, test_size=0.2, stratify=y, random_state=42
+print("Indeksowanie plików...")
+all_files = get_all_file_paths(folders)
+labels = [item[1] for item in all_files]
+
+print("Podział plików na zbiory (Train/Val)...")
+train_files, val_files = train_test_split(
+    all_files, test_size=0.2, stratify=labels, random_state=42
 )
 
-print("Obliczanie i zapis statystyk normalizacyjnych...")
-X_arch_MEAN = np.mean(X_train_raw, axis=(0, 1, 2), keepdims=True)
-X_arch_STD = np.std(X_train_raw, axis=(0, 1, 2), keepdims=True)
+print(f"Liczba plików treningowych: {len(train_files)}")
+print(f"Liczba plików walidacyjnych: {len(val_files)}")
 
-np.save(MEAN_FILE, X_arch_MEAN)
-np.save(STD_FILE, X_arch_STD)
-print(f"Zapisano statystyki do {MEAN_FILE} i {STD_FILE}")
+print("Generowanie segmentów treningowych...")
+X_train_raw, y_train = create_dataset_from_file_list(
+    train_files, SR, DURATION, STEP, CONST_MELS, CONST_FFT, CONST_HOP_LENGTH, CONST_AUGMENT
+)
 
-X_train = (X_train_raw - X_arch_MEAN) / (X_arch_STD + 1e-10)
-X_val = (X_val_raw - X_arch_MEAN) / (X_arch_STD + 1e-10)
+print("Generowanie segmentów walidacyjnych...")
+X_val_raw, y_val = create_dataset_from_file_list(
+    val_files, SR, DURATION, STEP, CONST_MELS, CONST_FFT, CONST_HOP_LENGTH, augment_settings=None
+)
+
+print("Obliczanie statystyk normalizacyjnych (tylko na Train)...")
+X_MEAN = np.mean(X_train_raw, axis=(0, 1, 2), keepdims=True)
+X_STD = np.std(X_train_raw, axis=(0, 1, 2), keepdims=True)
+
+np.save(MEAN_FILE, X_MEAN)
+np.save(STD_FILE, X_STD)
+
+X_train = (X_train_raw - X_MEAN) / (X_STD + 1e-10)
+X_val = (X_val_raw - X_MEAN) / (X_STD + 1e-10)
 
 X_train = np.expand_dims(X_train, axis=-1)
 X_val = np.expand_dims(X_val, axis=-1)
+
+print(f"Kształt X_train: {X_train.shape}")
+print(f"Kształt X_val: {X_val.shape}")
 
 print(f"Rozpoczęcie tuningu architektury 2D CNN na {X_train.shape[0]} segmentach...")
 results_arch = []
@@ -170,7 +174,7 @@ for conv_layers, filters, kernel_size, dropout_rate, dense_units, pool_size in p
           f"rec={metrics['recall']:.3f}, f1={metrics['f1']:.3f}")
 
 keys = results_arch[0].keys()
-with open('csv/cnn_2d_architecture_tuning.csv', 'w', newline='') as f:
+with open('csv_test/cnn_2d_architecture_tuning.csv', 'w', newline='') as f:
     dict_writer = csv.DictWriter(f, keys)
     dict_writer.writeheader()
     dict_writer.writerows(results_arch)

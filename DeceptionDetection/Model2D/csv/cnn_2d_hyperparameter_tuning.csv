@@ -1,0 +1,120 @@
+duration=2.0, step=1.0,  MELS=64, FFT=2048, HOP=512, aug={'noise': (0.001, 0.01), 'pitch': (-1, 1), 'stretch': (0.95, 1.05)}, batch=8 --> acc=0.729, prec=0.672, rec=0.867, f1=0.757
+duration=2.0, step=1.0,  MELS=64, FFT=2048, HOP=512, aug={'noise': (0.001, 0.01), 'pitch': (-1, 1), 'stretch': (0.95, 1.05)}, batch=16 --> acc=0.840, prec=0.822, rec=0.857, f1=0.839
+duration=2.0, step=1.0,  MELS=64, FFT=2048, HOP=512, aug={'noise': (0.001, 0.01), 'pitch': (-1, 1), 'stretch': (0.95, 1.05)}, batch=32 --> acc=0.521, prec=0.504, rec=0.990, f1=0.668
+duration=2.0, step=1.0,  MELS=64, FFT=2048, HOP=512, aug={'noise': (0.001, 0.015), 'pitch': (-2, 2), 'stretch': (0.9, 1.1)}, batch=8 --> acc=0.729, prec=0.653, rec=0.943, f1=0.772
+duration=2.0, step=1.0,  MELS=64, FFT=2048, HOP=512, aug={'noise': (0.001, 0.015), 'pitch': (-2, 2), 'stretch': (0.9, 1.1)}, batch=16 --> acc=0.704, prec=0.697, rec=0.690, f1=0.694
+duration=2.0, step=1.0,  MELS=64, FFT=2048, HOP=512, aug={'noise': (0.001, 0.015), 'pitch': (-2, 2), 'stretch': (0.9, 1.1)}, batch=32 --> acc=0.498, prec=0.487, rec=0.633, f1=0.551
+duration=2.0, step=1.0,  MELS=64, FFT=2048, HOP=512, aug={'noise': (0.005, 0.02), 'pitch': (-3, 3), 'stretch': (0.85, 1.15)}, batch=8 --> acc=0.817, prec=0.810, rec=0.814, f1=0.812
+duration=2.0, step=1.0,  MELS=64, FFT=2048, HOP=512, aug={'noise': (0.005, 0.02), 'pitch': (-3, 3), 'stretch': (0.85, 1.15)}, batch=16 --> acc=0.766, prec=0.744, rec=0.790, f1=0.767
+duration=2.0, step=1.0,  MELS=64, FFT=2048, HOP=512, aug={'noise': (0.005, 0.02), 'pitch': (-3, 3), 'stretch': (0.85, 1.15)}, batch=32 --> acc=0.491, prec=0.488, rec=0.990, f1=0.654
+duration=2.0, step=1.0,  MELS=64, FFT=2048, HOP=512, aug=None, batch=8 --> acc=0.685, prec=0.737, rec=0.548, f1=0.628
+duration=2.0, step=1.0,  MELS=64, FFT=2048, HOP=512, aug=None, batch=16 --> acc=0.685, prec=0.683, rec=0.657, f1=0.670
+duration=2.0, step=1.0,  MELS=64, FFT=2048, HOP=512, aug=None, batch=32 --> acc=0.486, prec=0.486, rec=1.000, f1=0.654
+duration=2.0, step=1.0,  MELS=128, FFT=2048, HOP=512, aug={'noise': (0.001, 0.01), 'pitch': (-1, 1), 'stretch': (0.95, 1.05)}, batch=8 --> acc=0.836, prec=0.817, rec=0.852, f1=0.834
+duration=2.0, step=1.0,  MELS=128, FFT=2048, HOP=512, aug={'noise': (0.001, 0.01), 'pitch': (-1, 1), 'stretch': (0.95, 1.05)}, batch=16 --> acc=0.736, prec=0.656, rec=0.962, f1=0.780
+duration=2.0, step=1.0,  MELS=128, FFT=2048, HOP=512, aug={'noise': (0.001, 0.01), 'pitch': (-1, 1), 'stretch': (0.95, 1.05)}, batch=32 --> acc=0.484, prec=0.485, rec=0.995, f1=0.652
+duration=2.0, step=1.0,  MELS=128, FFT=2048, HOP=512, aug={'noise': (0.001, 0.015), 'pitch': (-2, 2), 'stretch': (0.9, 1.1)}, batch=8 --> acc=0.616, prec=0.565, rec=0.914, f1=0.698
+duration=2.0, step=1.0,  MELS=128, FFT=2048, HOP=512, aug={'noise': (0.001, 0.015), 'pitch': (-2, 2), 'stretch': (0.9, 1.1)}, batch=16 --> acc=0.708, prec=0.721, rec=0.652, f1=0.685
+duration=2.0, step=1.0,  MELS=128, FFT=2048, HOP=512, aug={'noise': (0.001, 0.015), 'pitch': (-2, 2), 'stretch': (0.9, 1.1)}, batch=32 --> acc=0.521, prec=0.504, rec=0.995, f1=0.669
+duration=2.0, step=1.0,  MELS=128, FFT=2048, HOP=512, aug={'noise': (0.005, 0.02), 'pitch': (-3, 3), 'stretch': (0.85, 1.15)}, batch=8 --> acc=0.741, prec=0.693, rec=0.838, f1=0.759
+duration=2.0, step=1.0,  MELS=128, FFT=2048, HOP=512, aug={'noise': (0.005, 0.02), 'pitch': (-3, 3), 'stretch': (0.85, 1.15)}, batch=16 --> acc=0.713, prec=0.648, rec=0.895, f1=0.752
+duration=2.0, step=1.0,  MELS=128, FFT=2048, HOP=512, aug={'noise': (0.005, 0.02), 'pitch': (-3, 3), 'stretch': (0.85, 1.15)}, batch=32 --> acc=0.486, prec=0.486, rec=1.000, f1=0.654
+duration=2.0, step=1.0,  MELS=128, FFT=2048, HOP=512, aug=None, batch=8 --> acc=0.750, prec=0.827, rec=0.614, f1=0.705
+duration=2.0, step=1.0,  MELS=128, FFT=2048, HOP=512, aug=None, batch=16 --> acc=0.688, prec=0.687, rec=0.657, f1=0.672
+duration=2.0, step=1.0,  MELS=128, FFT=2048, HOP=512, aug=None, batch=32 --> acc=0.486, prec=0.486, rec=1.000, f1=0.654
+duration=2.0, step=1.0,  MELS=256, FFT=2048, HOP=512, aug={'noise': (0.001, 0.01), 'pitch': (-1, 1), 'stretch': (0.95, 1.05)}, batch=8 --> acc=0.657, prec=0.601, rec=0.876, f1=0.713
+duration=2.0, step=1.0,  MELS=256, FFT=2048, HOP=512, aug={'noise': (0.001, 0.01), 'pitch': (-1, 1), 'stretch': (0.95, 1.05)}, batch=16 --> acc=0.738, prec=0.696, rec=0.819, f1=0.753
+duration=2.0, step=1.0,  MELS=256, FFT=2048, HOP=512, aug={'noise': (0.001, 0.01), 'pitch': (-1, 1), 'stretch': (0.95, 1.05)}, batch=32 --> acc=0.486, prec=0.486, rec=1.000, f1=0.654
+duration=2.0, step=1.0,  MELS=256, FFT=2048, HOP=512, aug={'noise': (0.001, 0.015), 'pitch': (-2, 2), 'stretch': (0.9, 1.1)}, batch=8 --> acc=0.725, prec=0.669, rec=0.857, f1=0.752
+duration=2.0, step=1.0,  MELS=256, FFT=2048, HOP=512, aug={'noise': (0.001, 0.015), 'pitch': (-2, 2), 'stretch': (0.9, 1.1)}, batch=16 --> acc=0.785, prec=0.767, rec=0.800, f1=0.783
+duration=2.0, step=1.0,  MELS=256, FFT=2048, HOP=512, aug={'noise': (0.001, 0.015), 'pitch': (-2, 2), 'stretch': (0.9, 1.1)}, batch=32 --> acc=0.486, prec=0.486, rec=1.000, f1=0.654
+duration=2.0, step=1.0,  MELS=256, FFT=2048, HOP=512, aug={'noise': (0.005, 0.02), 'pitch': (-3, 3), 'stretch': (0.85, 1.15)}, batch=8 --> acc=0.685, prec=0.633, rec=0.838, f1=0.721
+duration=2.0, step=1.0,  MELS=256, FFT=2048, HOP=512, aug={'noise': (0.005, 0.02), 'pitch': (-3, 3), 'stretch': (0.85, 1.15)}, batch=16 --> acc=0.734, prec=0.702, rec=0.786, f1=0.742
+duration=2.0, step=1.0,  MELS=256, FFT=2048, HOP=512, aug={'noise': (0.005, 0.02), 'pitch': (-3, 3), 'stretch': (0.85, 1.15)}, batch=32 --> acc=0.486, prec=0.486, rec=1.000, f1=0.654
+duration=2.0, step=1.0,  MELS=256, FFT=2048, HOP=512, aug=None, batch=8 --> acc=0.824, prec=0.789, rec=0.871, f1=0.828
+duration=2.0, step=1.0,  MELS=256, FFT=2048, HOP=512, aug=None, batch=16 --> acc=0.725, prec=0.708, rec=0.738, f1=0.723
+duration=2.0, step=1.0,  MELS=256, FFT=2048, HOP=512, aug=None, batch=32 --> acc=0.486, prec=0.486, rec=1.000, f1=0.654
+duration=2.0, step=1.5,  MELS=64, FFT=2048, HOP=512, aug={'noise': (0.001, 0.01), 'pitch': (-1, 1), 'stretch': (0.95, 1.05)}, batch=8 --> acc=0.774, prec=0.726, rec=0.853, f1=0.785
+duration=2.0, step=1.5,  MELS=64, FFT=2048, HOP=512, aug={'noise': (0.001, 0.01), 'pitch': (-1, 1), 'stretch': (0.95, 1.05)}, batch=16 --> acc=0.740, prec=0.690, rec=0.839, f1=0.757
+duration=2.0, step=1.5,  MELS=64, FFT=2048, HOP=512, aug={'noise': (0.001, 0.01), 'pitch': (-1, 1), 'stretch': (0.95, 1.05)}, batch=32 --> acc=0.490, prec=0.486, rec=1.000, f1=0.654
+duration=2.0, step=1.5,  MELS=64, FFT=2048, HOP=512, aug={'noise': (0.001, 0.015), 'pitch': (-2, 2), 'stretch': (0.9, 1.1)}, batch=8 --> acc=0.743, prec=0.668, rec=0.930, f1=0.778
+duration=2.0, step=1.5,  MELS=64, FFT=2048, HOP=512, aug={'noise': (0.001, 0.015), 'pitch': (-2, 2), 'stretch': (0.9, 1.1)}, batch=16 --> acc=0.483, prec=0.483, rec=1.000, f1=0.651
+duration=2.0, step=1.5,  MELS=64, FFT=2048, HOP=512, aug={'noise': (0.001, 0.015), 'pitch': (-2, 2), 'stretch': (0.9, 1.1)}, batch=32 --> acc=0.476, prec=0.480, rec=0.986, f1=0.645
+duration=2.0, step=1.5,  MELS=64, FFT=2048, HOP=512, aug={'noise': (0.005, 0.02), 'pitch': (-3, 3), 'stretch': (0.85, 1.15)}, batch=8 --> acc=0.709, prec=0.657, rec=0.832, f1=0.735
+duration=2.0, step=1.5,  MELS=64, FFT=2048, HOP=512, aug={'noise': (0.005, 0.02), 'pitch': (-3, 3), 'stretch': (0.85, 1.15)}, batch=16 --> acc=0.649, prec=0.593, rec=0.867, f1=0.705
+duration=2.0, step=1.5,  MELS=64, FFT=2048, HOP=512, aug={'noise': (0.005, 0.02), 'pitch': (-3, 3), 'stretch': (0.85, 1.15)}, batch=32 --> acc=0.483, prec=0.483, rec=1.000, f1=0.651
+duration=2.0, step=1.5,  MELS=64, FFT=2048, HOP=512, aug=None, batch=8 --> acc=0.696, prec=0.739, rec=0.573, f1=0.646
+duration=2.0, step=1.5,  MELS=64, FFT=2048, HOP=512, aug=None, batch=16 --> acc=0.483, prec=0.483, rec=1.000, f1=0.651
+duration=2.0, step=1.5,  MELS=64, FFT=2048, HOP=512, aug=None, batch=32 --> acc=0.520, prec=0.502, rec=0.916, f1=0.649
+duration=2.0, step=1.5,  MELS=128, FFT=2048, HOP=512, aug={'noise': (0.001, 0.01), 'pitch': (-1, 1), 'stretch': (0.95, 1.05)}, batch=8 --> acc=0.682, prec=0.637, rec=0.797, f1=0.708
+duration=2.0, step=1.5,  MELS=128, FFT=2048, HOP=512, aug={'noise': (0.001, 0.01), 'pitch': (-1, 1), 'stretch': (0.95, 1.05)}, batch=16 --> acc=0.740, prec=0.723, rec=0.748, f1=0.735
+duration=2.0, step=1.5,  MELS=128, FFT=2048, HOP=512, aug={'noise': (0.001, 0.01), 'pitch': (-1, 1), 'stretch': (0.95, 1.05)}, batch=32 --> acc=0.551, prec=0.541, rec=0.462, f1=0.498
+duration=2.0, step=1.5,  MELS=128, FFT=2048, HOP=512, aug={'noise': (0.001, 0.015), 'pitch': (-2, 2), 'stretch': (0.9, 1.1)}, batch=8 --> acc=0.777, prec=0.742, rec=0.825, f1=0.781
+duration=2.0, step=1.5,  MELS=128, FFT=2048, HOP=512, aug={'noise': (0.001, 0.015), 'pitch': (-2, 2), 'stretch': (0.9, 1.1)}, batch=16 --> acc=0.713, prec=0.710, rec=0.685, f1=0.698
+duration=2.0, step=1.5,  MELS=128, FFT=2048, HOP=512, aug={'noise': (0.001, 0.015), 'pitch': (-2, 2), 'stretch': (0.9, 1.1)}, batch=32 --> acc=0.483, prec=0.483, rec=0.986, f1=0.648
+duration=2.0, step=1.5,  MELS=128, FFT=2048, HOP=512, aug={'noise': (0.005, 0.02), 'pitch': (-3, 3), 'stretch': (0.85, 1.15)}, batch=8 --> acc=0.716, prec=0.748, rec=0.622, f1=0.679
+duration=2.0, step=1.5,  MELS=128, FFT=2048, HOP=512, aug={'noise': (0.005, 0.02), 'pitch': (-3, 3), 'stretch': (0.85, 1.15)}, batch=16 --> acc=0.743, prec=0.745, rec=0.713, f1=0.729
+duration=2.0, step=1.5,  MELS=128, FFT=2048, HOP=512, aug={'noise': (0.005, 0.02), 'pitch': (-3, 3), 'stretch': (0.85, 1.15)}, batch=32 --> acc=0.483, prec=0.483, rec=1.000, f1=0.651
+duration=2.0, step=1.5,  MELS=128, FFT=2048, HOP=512, aug=None, batch=8 --> acc=0.777, prec=0.742, rec=0.825, f1=0.781
+duration=2.0, step=1.5,  MELS=128, FFT=2048, HOP=512, aug=None, batch=16 --> acc=0.483, prec=0.483, rec=1.000, f1=0.651
+duration=2.0, step=1.5,  MELS=128, FFT=2048, HOP=512, aug=None, batch=32 --> acc=0.483, prec=0.483, rec=1.000, f1=0.651
+duration=2.0, step=1.5,  MELS=256, FFT=2048, HOP=512, aug={'noise': (0.001, 0.01), 'pitch': (-1, 1), 'stretch': (0.95, 1.05)}, batch=8 --> acc=0.669, prec=0.645, rec=0.699, f1=0.671
+duration=2.0, step=1.5,  MELS=256, FFT=2048, HOP=512, aug={'noise': (0.001, 0.01), 'pitch': (-1, 1), 'stretch': (0.95, 1.05)}, batch=16 --> acc=0.483, prec=0.483, rec=1.000, f1=0.651
+duration=2.0, step=1.5,  MELS=256, FFT=2048, HOP=512, aug={'noise': (0.001, 0.01), 'pitch': (-1, 1), 'stretch': (0.95, 1.05)}, batch=32 --> acc=0.625, prec=0.570, rec=0.909, f1=0.701
+duration=2.0, step=1.5,  MELS=256, FFT=2048, HOP=512, aug={'noise': (0.001, 0.015), 'pitch': (-2, 2), 'stretch': (0.9, 1.1)}, batch=8 --> acc=0.676, prec=0.664, rec=0.664, f1=0.664
+duration=2.0, step=1.5,  MELS=256, FFT=2048, HOP=512, aug={'noise': (0.001, 0.015), 'pitch': (-2, 2), 'stretch': (0.9, 1.1)}, batch=16 --> acc=0.483, prec=0.483, rec=1.000, f1=0.651
+duration=2.0, step=1.5,  MELS=256, FFT=2048, HOP=512, aug={'noise': (0.001, 0.015), 'pitch': (-2, 2), 'stretch': (0.9, 1.1)}, batch=32 --> acc=0.483, prec=0.483, rec=1.000, f1=0.651
+duration=2.0, step=1.5,  MELS=256, FFT=2048, HOP=512, aug={'noise': (0.005, 0.02), 'pitch': (-3, 3), 'stretch': (0.85, 1.15)}, batch=8 --> acc=0.726, prec=0.738, rec=0.671, f1=0.703
+duration=2.0, step=1.5,  MELS=256, FFT=2048, HOP=512, aug={'noise': (0.005, 0.02), 'pitch': (-3, 3), 'stretch': (0.85, 1.15)}, batch=16 --> acc=0.493, prec=0.488, rec=0.979, f1=0.651
+duration=2.0, step=1.5,  MELS=256, FFT=2048, HOP=512, aug={'noise': (0.005, 0.02), 'pitch': (-3, 3), 'stretch': (0.85, 1.15)}, batch=32 --> acc=0.601, prec=0.553, rec=0.916, f1=0.689
+duration=2.0, step=1.5,  MELS=256, FFT=2048, HOP=512, aug=None, batch=8 --> acc=0.716, prec=0.653, rec=0.881, f1=0.750
+duration=2.0, step=1.5,  MELS=256, FFT=2048, HOP=512, aug=None, batch=16 --> acc=0.615, prec=0.566, rec=0.874, f1=0.687
+duration=2.0, step=1.5,  MELS=256, FFT=2048, HOP=512, aug=None, batch=32 --> acc=0.689, prec=0.662, rec=0.727, f1=0.693
+duration=2.0, step=2.0,  MELS=64, FFT=2048, HOP=512, aug={'noise': (0.001, 0.01), 'pitch': (-1, 1), 'stretch': (0.95, 1.05)}, batch=8 --> acc=0.678, prec=0.624, rec=0.867, f1=0.726
+duration=2.0, step=2.0,  MELS=64, FFT=2048, HOP=512, aug={'noise': (0.001, 0.01), 'pitch': (-1, 1), 'stretch': (0.95, 1.05)}, batch=16 --> acc=0.552, prec=0.564, rec=0.389, f1=0.461
+duration=2.0, step=2.0,  MELS=64, FFT=2048, HOP=512, aug={'noise': (0.001, 0.01), 'pitch': (-1, 1), 'stretch': (0.95, 1.05)}, batch=32 --> acc=0.561, prec=0.532, rec=0.885, f1=0.664
+duration=2.0, step=2.0,  MELS=64, FFT=2048, HOP=512, aug={'noise': (0.001, 0.015), 'pitch': (-2, 2), 'stretch': (0.9, 1.1)}, batch=8 --> acc=0.748, prec=0.789, rec=0.664, f1=0.721
+duration=2.0, step=2.0,  MELS=64, FFT=2048, HOP=512, aug={'noise': (0.001, 0.015), 'pitch': (-2, 2), 'stretch': (0.9, 1.1)}, batch=16 --> acc=0.522, prec=0.507, rec=0.956, f1=0.663
+duration=2.0, step=2.0,  MELS=64, FFT=2048, HOP=512, aug={'noise': (0.001, 0.015), 'pitch': (-2, 2), 'stretch': (0.9, 1.1)}, batch=32 --> acc=0.509, prec=0.500, rec=0.973, f1=0.661
+duration=2.0, step=2.0,  MELS=64, FFT=2048, HOP=512, aug={'noise': (0.005, 0.02), 'pitch': (-3, 3), 'stretch': (0.85, 1.15)}, batch=8 --> acc=0.648, prec=0.604, rec=0.823, f1=0.697
+duration=2.0, step=2.0,  MELS=64, FFT=2048, HOP=512, aug={'noise': (0.005, 0.02), 'pitch': (-3, 3), 'stretch': (0.85, 1.15)}, batch=16 --> acc=0.552, prec=0.528, rec=0.823, f1=0.644
+duration=2.0, step=2.0,  MELS=64, FFT=2048, HOP=512, aug={'noise': (0.005, 0.02), 'pitch': (-3, 3), 'stretch': (0.85, 1.15)}, batch=32 --> acc=0.548, prec=0.524, rec=0.867, f1=0.653
+duration=2.0, step=2.0,  MELS=64, FFT=2048, HOP=512, aug=None, batch=8 --> acc=0.757, prec=0.771, rec=0.717, f1=0.743
+duration=2.0, step=2.0,  MELS=64, FFT=2048, HOP=512, aug=None, batch=16 --> acc=0.491, prec=0.491, rec=1.000, f1=0.659
+duration=2.0, step=2.0,  MELS=64, FFT=2048, HOP=512, aug=None, batch=32 --> acc=0.717, prec=0.722, rec=0.690, f1=0.706
+duration=2.0, step=2.0,  MELS=128, FFT=2048, HOP=512, aug={'noise': (0.001, 0.01), 'pitch': (-1, 1), 'stretch': (0.95, 1.05)}, batch=8 --> acc=0.739, prec=0.719, rec=0.770, f1=0.744
+duration=2.0, step=2.0,  MELS=128, FFT=2048, HOP=512, aug={'noise': (0.001, 0.01), 'pitch': (-1, 1), 'stretch': (0.95, 1.05)}, batch=16 --> acc=0.504, prec=0.498, rec=0.982, f1=0.661
+duration=2.0, step=2.0,  MELS=128, FFT=2048, HOP=512, aug={'noise': (0.001, 0.01), 'pitch': (-1, 1), 'stretch': (0.95, 1.05)}, batch=32 --> acc=0.561, prec=0.532, rec=0.876, f1=0.662
+duration=2.0, step=2.0,  MELS=128, FFT=2048, HOP=512, aug={'noise': (0.001, 0.015), 'pitch': (-2, 2), 'stretch': (0.9, 1.1)}, batch=8 --> acc=0.726, prec=0.676, rec=0.850, f1=0.753
+duration=2.0, step=2.0,  MELS=128, FFT=2048, HOP=512, aug={'noise': (0.001, 0.015), 'pitch': (-2, 2), 'stretch': (0.9, 1.1)}, batch=16 --> acc=0.496, prec=0.493, rec=1.000, f1=0.661
+duration=2.0, step=2.0,  MELS=128, FFT=2048, HOP=512, aug={'noise': (0.001, 0.015), 'pitch': (-2, 2), 'stretch': (0.9, 1.1)}, batch=32 --> acc=0.570, prec=0.552, rec=0.655, f1=0.599
+duration=2.0, step=2.0,  MELS=128, FFT=2048, HOP=512, aug={'noise': (0.005, 0.02), 'pitch': (-3, 3), 'stretch': (0.85, 1.15)}, batch=8 --> acc=0.661, prec=0.609, rec=0.867, f1=0.715
+duration=2.0, step=2.0,  MELS=128, FFT=2048, HOP=512, aug={'noise': (0.005, 0.02), 'pitch': (-3, 3), 'stretch': (0.85, 1.15)}, batch=16 --> acc=0.491, prec=0.491, rec=1.000, f1=0.659
+duration=2.0, step=2.0,  MELS=128, FFT=2048, HOP=512, aug={'noise': (0.005, 0.02), 'pitch': (-3, 3), 'stretch': (0.85, 1.15)}, batch=32 --> acc=0.570, prec=0.536, rec=0.920, f1=0.678
+duration=2.0, step=2.0,  MELS=128, FFT=2048, HOP=512, aug=None, batch=8 --> acc=0.674, prec=0.676, rec=0.646, f1=0.661
+duration=2.0, step=2.0,  MELS=128, FFT=2048, HOP=512, aug=None, batch=16 --> acc=0.491, prec=0.491, rec=1.000, f1=0.659
+duration=2.0, step=2.0,  MELS=128, FFT=2048, HOP=512, aug=None, batch=32 --> acc=0.526, prec=0.509, rec=1.000, f1=0.675
+duration=2.0, step=2.0,  MELS=256, FFT=2048, HOP=512, aug={'noise': (0.001, 0.01), 'pitch': (-1, 1), 'stretch': (0.95, 1.05)}, batch=8 --> acc=0.674, prec=0.732, rec=0.531, f1=0.615
+duration=2.0, step=2.0,  MELS=256, FFT=2048, HOP=512, aug={'noise': (0.001, 0.01), 'pitch': (-1, 1), 'stretch': (0.95, 1.05)}, batch=16 --> acc=0.491, prec=0.491, rec=1.000, f1=0.659
+duration=2.0, step=2.0,  MELS=256, FFT=2048, HOP=512, aug={'noise': (0.001, 0.01), 'pitch': (-1, 1), 'stretch': (0.95, 1.05)}, batch=32 --> acc=0.491, prec=0.491, rec=1.000, f1=0.659
+duration=2.0, step=2.0,  MELS=256, FFT=2048, HOP=512, aug={'noise': (0.001, 0.015), 'pitch': (-2, 2), 'stretch': (0.9, 1.1)}, batch=8 --> acc=0.709, prec=0.662, rec=0.832, f1=0.737
+duration=2.0, step=2.0,  MELS=256, FFT=2048, HOP=512, aug={'noise': (0.001, 0.015), 'pitch': (-2, 2), 'stretch': (0.9, 1.1)}, batch=16 --> acc=0.491, prec=0.491, rec=1.000, f1=0.659
+duration=2.0, step=2.0,  MELS=256, FFT=2048, HOP=512, aug={'noise': (0.001, 0.015), 'pitch': (-2, 2), 'stretch': (0.9, 1.1)}, batch=32 --> acc=0.557, prec=0.543, rec=0.619, f1=0.579
+duration=2.0, step=2.0,  MELS=256, FFT=2048, HOP=512, aug={'noise': (0.005, 0.02), 'pitch': (-3, 3), 'stretch': (0.85, 1.15)}, batch=8 --> acc=0.652, prec=0.600, rec=0.876, f1=0.712
+duration=2.0, step=2.0,  MELS=256, FFT=2048, HOP=512, aug={'noise': (0.005, 0.02), 'pitch': (-3, 3), 'stretch': (0.85, 1.15)}, batch=16 --> acc=0.491, prec=0.491, rec=1.000, f1=0.659
+duration=2.0, step=2.0,  MELS=256, FFT=2048, HOP=512, aug={'noise': (0.005, 0.02), 'pitch': (-3, 3), 'stretch': (0.85, 1.15)}, batch=32 --> acc=0.496, prec=0.493, rec=0.991, f1=0.659
+duration=2.0, step=2.0,  MELS=256, FFT=2048, HOP=512, aug=None, batch=8 --> acc=0.696, prec=0.678, rec=0.726, f1=0.701
+duration=2.0, step=2.0,  MELS=256, FFT=2048, HOP=512, aug=None, batch=16 --> acc=0.513, prec=0.502, rec=1.000, f1=0.669
+duration=2.0, step=2.0,  MELS=256, FFT=2048, HOP=512, aug=None, batch=32 --> acc=0.491, prec=0.491, rec=1.000, f1=0.659
+duration=3.0, step=1.0,  MELS=64, FFT=2048, HOP=512, aug={'noise': (0.001, 0.01), 'pitch': (-1, 1), 'stretch': (0.95, 1.05)}, batch=8 --> acc=0.803, prec=0.831, rec=0.746, f1=0.786
+duration=3.0, step=1.0,  MELS=64, FFT=2048, HOP=512, aug={'noise': (0.001, 0.01), 'pitch': (-1, 1), 'stretch': (0.95, 1.05)}, batch=16 --> acc=0.443, prec=0.463, rec=0.909, f1=0.613
+duration=3.0, step=1.0,  MELS=64, FFT=2048, HOP=512, aug={'noise': (0.001, 0.01), 'pitch': (-1, 1), 'stretch': (0.95, 1.05)}, batch=32 --> acc=0.564, prec=0.529, rec=0.934, f1=0.675
+duration=3.0, step=1.0,  MELS=64, FFT=2048, HOP=512, aug={'noise': (0.001, 0.015), 'pitch': (-2, 2), 'stretch': (0.9, 1.1)}, batch=8 --> acc=0.739, prec=0.763, rec=0.670, f1=0.714
+duration=3.0, step=1.0,  MELS=64, FFT=2048, HOP=512, aug={'noise': (0.001, 0.015), 'pitch': (-2, 2), 'stretch': (0.9, 1.1)}, batch=16 --> acc=0.658, prec=0.604, rec=0.853, f1=0.707
+duration=3.0, step=1.0,  MELS=64, FFT=2048, HOP=512, aug={'noise': (0.001, 0.015), 'pitch': (-2, 2), 'stretch': (0.9, 1.1)}, batch=32 --> acc=0.631, prec=0.581, rec=0.858, f1=0.693
+duration=3.0, step=1.0,  MELS=64, FFT=2048, HOP=512, aug={'noise': (0.005, 0.02), 'pitch': (-3, 3), 'stretch': (0.85, 1.15)}, batch=8 --> acc=0.746, prec=0.703, rec=0.827, f1=0.760
+duration=3.0, step=1.0,  MELS=64, FFT=2048, HOP=512, aug={'noise': (0.005, 0.02), 'pitch': (-3, 3), 'stretch': (0.85, 1.15)}, batch=16 --> acc=0.488, prec=0.486, rec=1.000, f1=0.654
+duration=3.0, step=1.0,  MELS=64, FFT=2048, HOP=512, aug={'noise': (0.005, 0.02), 'pitch': (-3, 3), 'stretch': (0.85, 1.15)}, batch=32 --> acc=0.485, prec=0.485, rec=1.000, f1=0.653
+duration=3.0, step=1.0,  MELS=64, FFT=2048, HOP=512, aug=None, batch=8 --> acc=0.692, prec=0.740, rec=0.563, f1=0.640
+duration=3.0, step=1.0,  MELS=64, FFT=2048, HOP=512, aug=None, batch=16 --> acc=0.776, prec=0.757, rec=0.792, f1=0.774
+duration=3.0, step=1.0,  MELS=64, FFT=2048, HOP=512, aug=None, batch=32 --> acc=0.485, prec=0.485, rec=1.000, f1=0.653

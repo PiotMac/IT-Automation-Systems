@@ -6,14 +6,12 @@ from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_sc
 from utils import split_into_segments
 
 SR = 22050
-N_MFCC = 20
 DURATION = 2.0
 STEP = 1.0
-CONST_MELS = 128
+CONST_MELS = 64
 CONST_FFT = 2048
 CONST_HOP_LENGTH = 512
 MODEL_PATH = "best_cnn_2D_model.h5"
-NEW_DATA_FOLDER = "../New clips"
 
 folders = {
     "truth": "../New clips/Truthful",
