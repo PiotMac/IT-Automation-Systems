@@ -1,0 +1,99 @@
+Indeksowanie plików...
+Podział plików na zbiory (Train/Val)...
+Liczba plików treningowych: 139
+Liczba plików walidacyjnych: 35
+Generowanie segmentów treningowych...
+Generowanie segmentów walidacyjnych...
+Obliczanie statystyk normalizacyjnych (tylko na Train)...
+Kształt X_train: (1462, 128, 86, 1)
+Kształt X_val: (432, 128, 86, 1)
+Budowa modelu...
+2026-01-10 15:09:25.582868: I tensorflow/core/platform/cpu_feature_guard.cc:210] This TensorFlow binary is optimized to use available CPU instructions in performance-critical operations.
+To enable the following instructions: SSE3 SSE4.1 SSE4.2 AVX, in other operations, rebuild TensorFlow with the appropriate compiler flags.
+🚀 Trenowanie modelu...
+Epoch 1/50
+183/183 ━━━━━━━━━━━━━━━━━━━━ 0s 797ms/step - accuracy: 0.6624 - loss: 0.6110
+WARNING:absl:You are saving your model as an HDF5 file via `model.save()` or `keras.saving.save_model(model)`. This file format is considered legacy. We recommend using instead the native Keras format, e.g. `model.save('my_model.keras')` or `keras.saving.save_model(model, 'my_model.keras')`.
+Epoch 1: val_loss improved from None to 0.65152, saving model to best_cnn_lstm_model.h5
+183/183 ━━━━━━━━━━━━━━━━━━━━ 174s 904ms/step - accuracy: 0.7114 - loss: 0.5418 - val_accuracy: 0.7292 - val_loss: 0.6515
+Epoch 2/50
+183/183 ━━━━━━━━━━━━━━━━━━━━ 0s 786ms/step - accuracy: 0.7837 - loss: 0.4307
+Epoch 2: val_loss did not improve from 0.65152
+183/183 ━━━━━━━━━━━━━━━━━━━━ 158s 862ms/step - accuracy: 0.7900 - loss: 0.4142 - val_accuracy: 0.5833 - val_loss: 0.7534
+Epoch 3/50
+183/183 ━━━━━━━━━━━━━━━━━━━━ 0s 738ms/step - accuracy: 0.8498 - loss: 0.3146
+Epoch 3: val_loss improved from 0.65152 to 0.64765, saving model to best_cnn_lstm_model.h5
+WARNING:absl:You are saving your model as an HDF5 file via `model.save()` or `keras.saving.save_model(model)`. This file format is considered legacy. We recommend using instead the native Keras format, e.g. `model.save('my_model.keras')` or `keras.saving.save_model(model, 'my_model.keras')`.
+183/183 ━━━━━━━━━━━━━━━━━━━━ 148s 806ms/step - accuracy: 0.8550 - loss: 0.3111 - val_accuracy: 0.6875 - val_loss: 0.6476
+Epoch 4/50
+183/183 ━━━━━━━━━━━━━━━━━━━━ 0s 735ms/step - accuracy: 0.8761 - loss: 0.2628
+WARNING:absl:You are saving your model as an HDF5 file via `model.save()` or `keras.saving.save_model(model)`. This file format is considered legacy. We recommend using instead the native Keras format, e.g. `model.save('my_model.keras')` or `keras.saving.save_model(model, 'my_model.keras')`.
+Epoch 4: val_loss improved from 0.64765 to 0.52992, saving model to best_cnn_lstm_model.h5
+183/183 ━━━━━━━━━━━━━━━━━━━━ 147s 803ms/step - accuracy: 0.8837 - loss: 0.2437 - val_accuracy: 0.8125 - val_loss: 0.5299
+Epoch 5/50
+183/183 ━━━━━━━━━━━━━━━━━━━━ 0s 754ms/step - accuracy: 0.9094 - loss: 0.1940
+Epoch 5: val_loss did not improve from 0.52992
+183/183 ━━━━━━━━━━━━━━━━━━━━ 151s 823ms/step - accuracy: 0.9097 - loss: 0.1926 - val_accuracy: 0.7894 - val_loss: 0.5513
+Epoch 6/50
+183/183 ━━━━━━━━━━━━━━━━━━━━ 0s 764ms/step - accuracy: 0.9041 - loss: 0.2024
+Epoch 6: val_loss did not improve from 0.52992
+183/183 ━━━━━━━━━━━━━━━━━━━━ 153s 834ms/step - accuracy: 0.9166 - loss: 0.1780 - val_accuracy: 0.6829 - val_loss: 0.8168
+Epoch 7/50
+183/183 ━━━━━━━━━━━━━━━━━━━━ 0s 737ms/step - accuracy: 0.9439 - loss: 0.1308
+Epoch 7: val_loss did not improve from 0.52992
+183/183 ━━━━━━━━━━━━━━━━━━━━ 149s 813ms/step - accuracy: 0.9337 - loss: 0.1407 - val_accuracy: 0.7569 - val_loss: 0.7118
+Epoch 8/50
+183/183 ━━━━━━━━━━━━━━━━━━━━ 0s 738ms/step - accuracy: 0.9540 - loss: 0.1105
+Epoch 8: val_loss improved from 0.52992 to 0.49456, saving model to best_cnn_lstm_model.h5
+WARNING:absl:You are saving your model as an HDF5 file via `model.save()` or `keras.saving.save_model(model)`. This file format is considered legacy. We recommend using instead the native Keras format, e.g. `model.save('my_model.keras')` or `keras.saving.save_model(model, 'my_model.keras')`.
+183/183 ━━━━━━━━━━━━━━━━━━━━ 148s 808ms/step - accuracy: 0.9425 - loss: 0.1289 - val_accuracy: 0.7986 - val_loss: 0.4946
+Epoch 9/50
+183/183 ━━━━━━━━━━━━━━━━━━━━ 0s 742ms/step - accuracy: 0.9635 - loss: 0.0906
+Epoch 9: val_loss did not improve from 0.49456
+183/183 ━━━━━━━━━━━━━━━━━━━━ 150s 817ms/step - accuracy: 0.9590 - loss: 0.0958 - val_accuracy: 0.7685 - val_loss: 0.7408
+Epoch 10/50
+183/183 ━━━━━━━━━━━━━━━━━━━━ 0s 815ms/step - accuracy: 0.9557 - loss: 0.1041
+Epoch 10: val_loss did not improve from 0.49456
+183/183 ━━━━━━━━━━━━━━━━━━━━ 162s 885ms/step - accuracy: 0.9569 - loss: 0.0984 - val_accuracy: 0.7361 - val_loss: 0.8330
+Epoch 11/50
+183/183 ━━━━━━━━━━━━━━━━━━━━ 0s 736ms/step - accuracy: 0.9636 - loss: 0.0827
+Epoch 11: val_loss did not improve from 0.49456
+183/183 ━━━━━━━━━━━━━━━━━━━━ 148s 809ms/step - accuracy: 0.9596 - loss: 0.0885 - val_accuracy: 0.7685 - val_loss: 0.9857
+Epoch 12/50
+183/183 ━━━━━━━━━━━━━━━━━━━━ 0s 736ms/step - accuracy: 0.9721 - loss: 0.0688
+Epoch 12: val_loss did not improve from 0.49456
+183/183 ━━━━━━━━━━━━━━━━━━━━ 148s 809ms/step - accuracy: 0.9713 - loss: 0.0692 - val_accuracy: 0.8056 - val_loss: 0.7925
+Epoch 13/50
+183/183 ━━━━━━━━━━━━━━━━━━━━ 0s 740ms/step - accuracy: 0.9634 - loss: 0.0913
+Epoch 13: val_loss did not improve from 0.49456
+183/183 ━━━━━━━━━━━━━━━━━━━━ 149s 816ms/step - accuracy: 0.9665 - loss: 0.0774 - val_accuracy: 0.7755 - val_loss: 0.9750
+Epoch 13: early stopping
+Restoring model weights from the end of the best epoch: 8.
+WARNING:absl:Compiled the loaded model, but the compiled metrics have yet to be built. `model.compile_metrics` will be empty until you train or evaluate the model.
+
+Użyto najlepszego modelu zapisanego w best_cnn_lstm_model.h5 do ewaluacji.
+Ewaluacja modelu na zbiorze walidacyjnym (segmenty)...
+14/14 ━━━━━━━━━━━━━━━━━━━━ 14s 943ms/step
+
+=================== WYNIKI DLA SEGMENTÓW ===================
+Accuracy : 0.7986
+Precision: 0.7758
+Recall   : 0.8238
+F1-score : 0.7991
+
+Confusion matrix:
+[[172  50]
+ [ 37 173]]
+
+Ewaluacja modelu na poziomie całych plików...
+
+=================== WYNIKI DLA PLIKÓW CAŁKOWITYCH ===================
+Accuracy : 0.8000
+Precision: 0.7895
+Recall   : 0.8333
+F1-score : 0.8108
+
+Confusion matrix:
+[[13  4]
+ [ 3 15]]
+Najlepszy model został już zapisany przez ModelCheckpoint do: best_cnn_lstm_model.h5

@@ -1,0 +1,88 @@
+import os
+import numpy as np
+import librosa
+from tensorflow.keras.models import load_model
+from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score, confusion_matrix
+from utils import split_into_segments
+
+SR = 22050
+N_MFCC = 20
+DURATION = 2.0
+STEP = 1.0
+CONST_MELS = 128
+CONST_FFT = 2048
+CONST_HOP_LENGTH = 512
+MODEL_PATH = "best_cnn_lstm_model.h5"
+NEW_DATA_FOLDER = "../New clips"
+
+folders = {
+    "truth": "../New clips/Truthful",
+    "lie": "../New clips/Deceptive"
+}
+
+try:
+    GLOBAL_MEAN = np.load("X_MEAN.npy")
+    GLOBAL_STD = np.load("X_STD.npy")
+except FileNotFoundError:
+    print("BŁĄD: Nie znaleziono plików X_MEAN.npy lub X_STD.npy.")
+    exit(1)
+
+
+def extract_melspectograms_segments(path):
+    audio, _ = librosa.load(path, sr=SR, mono=True)
+    segments = split_into_segments(audio, SR, DURATION, STEP)
+    X = []
+    for seg in segments:
+        mel_spec = librosa.feature.melspectrogram(
+            y=seg, sr=SR, n_fft=CONST_FFT, hop_length=CONST_HOP_LENGTH, n_mels=CONST_MELS
+        )
+        log_mel_spec = librosa.power_to_db(mel_spec, ref=np.max)
+
+        # Zapewnienie stałej długości ramki czasowej
+        target_frames = int(SR * DURATION / CONST_HOP_LENGTH)
+        log_mel_spec = librosa.util.fix_length(log_mel_spec, size=target_frames, axis=1)
+        X.append(log_mel_spec)
+
+    X = np.array(X)
+
+    X_normalized = (X - GLOBAL_MEAN) / (GLOBAL_STD + 1e-10)
+
+    X = np.expand_dims(X_normalized, axis=-1)
+
+    return X
+
+def predict_file(model, path):
+    X = extract_melspectograms_segments(path)
+    y_pred_prob = model.predict(X, verbose=0)
+    y_pred = int(np.mean(y_pred_prob) > 0.5)
+    return y_pred
+
+if __name__ == "__main__":
+    print("Wczytywanie modelu...")
+    model = load_model(MODEL_PATH)
+
+    y_true, y_pred = [], []
+
+    for label, folder in folders.items():
+        label_val = 0 if label == "truth" else 1
+        for file in os.listdir(folder):
+            if file.endswith(".wav"):
+                path = os.path.join(folder, file)
+                pred = predict_file(model, path)
+                y_true.append(label_val)
+                y_pred.append(pred)
+                print(f"{file}: przewidziano {pred} (prawda=0, fałsz=1)")
+
+    acc = accuracy_score(y_true, y_pred)
+    prec = precision_score(y_true, y_pred)
+    rec = recall_score(y_true, y_pred)
+    f1 = f1_score(y_true, y_pred)
+    cm = confusion_matrix(y_true, y_pred)
+
+    print("\n=================== WYNIKI DLA NOWYCH NAGRAŃ ===================")
+    print(f"Accuracy : {acc:.4f}")
+    print(f"Precision: {prec:.4f}")
+    print(f"Recall   : {rec:.4f}")
+    print(f"F1-score : {f1:.4f}")
+    print("\nConfusion matrix:")
+    print(cm)
